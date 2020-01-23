@@ -1,0 +1,37 @@
+.login-container {
+  display: none;
+}
+
+.main-container {
+  display: block;
+}
+
+.nav-item {
+  color: white;
+}
+
+.nav-item:hover {
+  cursor: pointer;
+}
+
+.fa-search {
+  color: black;
+}
+
+.vertical-center {
+  min-height: 100vh;
+  display: flex;
+  align-items: center;
+}
+
+#search-recipes {
+  display: none;
+}
+
+#recipes {
+  display: none;
+}
+
+#add-recipes {
+  display: block;
+}

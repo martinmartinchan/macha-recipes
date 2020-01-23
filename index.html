@@ -1,0 +1,124 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <!-- Required meta tags -->
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
+
+    <!-- Bootstrap CSS -->
+    <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/4.0.0/css/bootstrap.min.css">
+
+    <!-- Font awesome -->
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.11.2/css/all.min.css">
+
+    <link rel="stylesheet" href="style.css">
+    <title>Macha Recipes</title>
+  </head>
+  <body>
+
+    <!-- Login container -->
+    <div class="container login-container">
+      <div class="row">
+        <div class="col-md-6 vertical-center mx-auto">
+          <div class="card card-body text-center">
+            <h1 class="heading pb-3">
+              Login
+            </h1>
+            <!-- Password form -->
+            <form id="password-form">
+              <div class="form-group text-left pb-3">
+                <label for="password">Are you Martin?</label>
+                <div class="input-group inline-block">
+                  <input type="password" class="form-control" id="password" placeholder="Enter password">
+                  <input type="submit" value="Login" class="btn btn-dark">
+                </div>
+              </div>
+              <!-- Guest form -->
+              <div class="form group text-left">
+                <label for="guest-login">If not, then please</label>
+                <input type="submit" value="Continue as guest" class="btn btn-dark btn-block" id=guest-login>
+              </div>
+            </form>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- Main container -->
+    <div class="container main-container">
+      <!-- Navigation bar -->
+      <nav class="navbar navbar-expand-md bg-dark">
+        <ul class="navbar-nav ml-auto">
+            <li class="nav-item p-2">Recipes</li>
+            <li class="nav-item p-2">Add recipe</li>
+            <li class="nav-item p-2">Login</li>
+      </nav>
+
+      <!-- Search bar -->
+      <form id="search-recipes">
+        <div class="p-3 w-50 rounded mx-auto">
+          <div class="input-group">
+            <input type="search" placeholder="Search for a recipe..." class="form-control">
+            <div class="input-group-append">
+              <button type="submit" class="btn btn-link"><i class="fa fa-search"></i></button>
+            </div>
+          </div>
+        </div>
+      </form>
+
+      <!-- Recipe List -->
+      <div class="container mt-5" id="recipes" align="center">
+      </div>
+
+      <!-- Add Recipe -->
+      <div class="container mt-5" id="add-recipes" align="center">
+        <form>
+          <!-- Recipe Name -->
+          <div class="form-group" align="left">
+            <label for="recipeName">Recipe Name</label>
+            <input type="text" class="form-control" id="recipeName" aria-describedby="emailHelp" placeholder="Enter recipe name">
+          </div>
+
+          <!-- Description -->
+          <div class="form-group" align="left">
+            <label for="recipeDescription">Description</label>
+            <textarea type="text" class="form-control" id="recipeDescription" rows="3" placeholder="Enter description"></textarea>
+          </div>
+
+          <!-- Ingredients -->
+          <div class="form-row w-75" align="left">
+            <div class="form-group col-md-8">
+              <label for="ingredients">Ingredient</label>
+              <input type="text" class="form-control" id="ingredients">
+            </div>
+            <div class="form-group col-md-3">
+              <label for="units">Unit</label>
+              <select id="units" class="form-control">
+              </select>
+            </div>
+            <div class="form-group col-md-8">
+              <input type="text" class="form-control" id="ingredients" readonly>
+            </div>
+            <div class="form-group col-md-3">
+              <select id="units" class="form-control" readonly>
+              </select>
+            </div>
+            <div class="form-group col-md-1">
+              <button type="submit" class="btn btn-primary">+</button>
+            </div>
+          </div>
+          
+
+          <div align="right">
+            <button type="submit" class="btn btn-primary">Add Recipe</button>
+          </div>
+        </form>
+      </div>
+
+    </div>
+    <script src="http.js"></script>
+    <script src="ui.js"></script>
+    <script src="app.js"></script>
+  </body>
+</html>
