@@ -87,25 +87,25 @@
           </div>
 
           <!-- Ingredients -->
-          <div class="form-row w-75" align="left">
+          <div class="form-row w-75" align="left" id=IngredientList>
             <div class="form-group col-md-8">
               <label for="ingredients">Ingredient</label>
-              <input type="text" class="form-control" id="ingredients">
+              <input class="form-control" id="ingredients">
             </div>
             <div class="form-group col-md-3">
               <label for="units">Unit</label>
-              <select id="units" class="form-control">
-              </select>
+              <input list="unitList" id="units" class="form-control">
+              </input>
             </div>
             <div class="form-group col-md-8">
-              <input type="text" class="form-control" id="ingredients" readonly>
+              <input class="form-control" readonly>
             </div>
             <div class="form-group col-md-3">
-              <select id="units" class="form-control" readonly>
-              </select>
+              <input class="form-control" readonly>
+              </input>
             </div>
             <div class="form-group col-md-1">
-              <button type="submit" class="btn btn-primary">+</button>
+              <button type="submit" id="addIngredientButton" class="btn btn-primary">+</button>
             </div>
           </div>
           
@@ -122,3 +122,8 @@
     <script src="app.js"></script>
   </body>
 </html>
+
+<datalist id=unitList>
+  <option value="g"></option>
+  <option value="dl"></option>
+</datalist>

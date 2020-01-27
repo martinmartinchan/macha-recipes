@@ -33,4 +33,31 @@ class uiHandler {
 
     });
   }
+
+  addIngredientRow(e) {
+    const ingredientDiv = document.createElement('div');
+    const unitDiv = document.createElement('div');
+    
+    ingredientDiv.classList.add('form-group');
+    ingredientDiv.classList.add('col-md-8');
+
+    unitDiv.classList.add('form-group');
+    unitDiv.classList.add('col-md-3');
+
+    const ingredientInput = document.createElement('input');
+    const unitInput = document.createElement('input');
+
+    ingredientInput.classList.add('form-control');
+    unitInput.classList.add('form-control');
+    unitInput.setAttribute("list", "unitList");
+
+    ingredientDiv.appendChild(ingredientInput);
+    unitDiv.appendChild(unitInput);
+
+    const ingredientList = document.getElementById("IngredientList");
+    let childrenNumber = ingredientList.children.length;
+    ingredientList.insertBefore(ingredientDiv, ingredientList.childNodes[childrenNumber]);
+    ingredientList.insertBefore(unitDiv, ingredientList.childNodes[childrenNumber + 1]);
+    e.preventDefault()
+  }
 }
