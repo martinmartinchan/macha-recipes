@@ -1,4 +1,21 @@
 class uiHandler {
+  goToRecipesPage() {
+    document.getElementById('search-recipes').style.display = "block";
+    document.getElementById('recipes').style.display = "block";
+    document.getElementById('add-recipes').style.display = "none";
+    document.getElementById('login-container').style.display = "none";
+  }
+  
+  goToAddRecipePage() {
+    document.getElementById('search-recipes').style.display = "none";
+    document.getElementById('recipes').style.display = "none";
+    document.getElementById('add-recipes').style.display = "block";
+    document.getElementById('login-container').style.display = "none";
+  }
+
+  goToLoginPage() {// TODO
+  }
+
   showRecipes(data) {
     const recipes = data.result.recipes;
     let recipeCard;

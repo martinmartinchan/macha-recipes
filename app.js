@@ -1,6 +1,13 @@
 const hH = new httpHandler;
 const uH = new uiHandler;
 
+/** Make the navbar navigate to corresponding page
+ */
+document.getElementById("recipes-nav").addEventListener('click', uH.goToRecipesPage);
+document.getElementById("add-recipe-nav").addEventListener('click', uH.goToAddRecipePage);
+document.getElementById("login-nav").addEventListener('click', uH.goToLoginPage);
+
+
 /** Get the data from the database and show it.
  */
 hH.get("https://martinchan.pythonanywhere.com/recipes")
