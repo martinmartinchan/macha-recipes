@@ -18,3 +18,7 @@ hH.get("https://martinchan.pythonanywhere.com/recipes")
  *  add a new row when clicked.
  */
 document.getElementById("addIngredientButton").addEventListener('click', uH.addIngredientRow);
+
+/** Make the add recipe button submit the recipe to the cookbook
+ */
+document.getElementById("submit-recipe-button").addEventListener('click', uH.submitRecipe);

@@ -75,32 +75,49 @@
       <div class="container mt-5" id="add-recipes" align="center">
         <form>
           <!-- Recipe Name -->
-          <div class="form-group" align="left">
-            <label for="recipeName">Recipe Name</label>
-            <input type="text" class="form-control" id="recipeName" aria-describedby="emailHelp" placeholder="Enter recipe name">
+          <div class="form-group col-md-12" align="left">
+            <label for="recipe-name-input">Recipe Name</label>
+            <input class="form-control" id="recipe-name-input" placeholder="Enter recipe name">
           </div>
 
+          <!-- Servings -->
+          <div align="left">
+            <div class="form-group col-md-3" align="left">
+              <label for="servings-input">Servings</label>
+              <input type="number" class="form-control" id="servings-input" placeholder="Enter number of servings"></input>
+            </div>
+        </div>
+
           <!-- Description -->
-          <div class="form-group" align="left">
-            <label for="recipeDescription">Description</label>
-            <textarea type="text" class="form-control" id="recipeDescription" rows="3" placeholder="Enter description"></textarea>
+          <div class="form-group col-md-12" align="left">
+            <label for="recipe-description-input">Description</label>
+            <textarea class="form-control" id="recipe-description-input" rows="3" placeholder="Enter description"></textarea>
           </div>
 
           <!-- Ingredients -->
           <div class="form-row w-75" align="left" id=IngredientList>
-            <div class="form-group col-md-8">
-              <label for="ingredients">Ingredient</label>
-              <input class="form-control" id="ingredients">
+            <div class="form-group col-md-7">
+              <label for="ingredients-input">Ingredient</label>
+              <input class="form-control" id="ingredients-input">
             </div>
-            <div class="form-group col-md-3">
-              <label for="units">Unit</label>
-              <input list="unitList" id="units" class="form-control">
+            <div class="form-group col-md-2">
+              <label for="amount-input">Amount</label>
+              <input type="number" id="amount-input" class="form-control">
               </input>
             </div>
-            <div class="form-group col-md-8">
+            <div class="form-group col-md-2">
+              <label for="units-input">Unit</label>
+              <input list="unitList" id="units-input" class="form-control">
+              </input>
+            </div>
+            <div class="form-group col-md-7">
               <input class="form-control" readonly>
             </div>
-            <div class="form-group col-md-3">
+            <div class="form-group col-md-2">
+              <input class="form-control" readonly>
+              </input>
+            </div>
+            <div class="form-group col-md-2">
               <input class="form-control" readonly>
               </input>
             </div>
@@ -111,7 +128,7 @@
           
 
           <div align="right">
-            <button type="submit" class="btn btn-primary">Add Recipe</button>
+            <button type="submit" class="btn btn-primary" id="submit-recipe-button">Add Recipe</button>
           </div>
         </form>
       </div>
