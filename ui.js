@@ -92,7 +92,7 @@ class uiHandler {
     e.preventDefault();
   }
 
-  submitRecipe(e) {
+  submitRecipe(e, hH, url) {
     let recipe = {};
     const recipeName = document.getElementById("recipe-name-input").value;
     const description = document.getElementById("recipe-description-input").value;
@@ -117,8 +117,12 @@ class uiHandler {
     recipe['servings'] = servings;
     recipe['description'] = description;
     recipe['ingredients'] = ingObjects;
+    recipe['password'] = 'Troglodon5986';
 
-    console.log(recipe);
+    hH.post(url, recipe)
+      .then(data => console.log(data))
+      .catch(err => console.log(err));
+
     e.preventDefault();
   }
 }
