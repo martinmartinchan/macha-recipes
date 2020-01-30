@@ -52,6 +52,10 @@ class uiHandler {
   }
 
   addIngredientRow(e) {
+    const rowDiv = document.createElement('div');
+    rowDiv.classList.add('form-row');
+    rowDiv.classList.add('flex-nowrap');
+
     const ingredientDiv = document.createElement('div');
     const unitDiv = document.createElement('div');
     const amountDiv = document.createElement('div');
@@ -84,11 +88,13 @@ class uiHandler {
     amountDiv.appendChild(amountInput);
     unitDiv.appendChild(unitInput);
 
+    rowDiv.appendChild(ingredientDiv);
+    rowDiv.appendChild(amountDiv);
+    rowDiv.appendChild(unitDiv);
+
     const ingredientList = document.getElementById("IngredientList");
     let childrenNumber = ingredientList.children.length;
-    ingredientList.insertBefore(ingredientDiv, ingredientList.childNodes[childrenNumber]);
-    ingredientList.insertBefore(amountDiv, ingredientList.childNodes[childrenNumber + 1]);
-    ingredientList.insertBefore(unitDiv, ingredientList.childNodes[childrenNumber + 2]);
+    ingredientList.insertBefore(rowDiv, ingredientList.childNodes[childrenNumber]);
     e.preventDefault();
   }
 
