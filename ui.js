@@ -2,6 +2,7 @@ class uiHandler {
   goToRecipesPage() {
     document.getElementById('search-recipes').style.display = "block";
     document.getElementById('recipes').style.display = "block";
+    document.getElementById('single-recipe').style.display = "none";
     document.getElementById('add-recipes').style.display = "none";
     document.getElementById('login-container').style.display = "none";
   }
@@ -9,11 +10,34 @@ class uiHandler {
   goToAddRecipePage() {
     document.getElementById('search-recipes').style.display = "none";
     document.getElementById('recipes').style.display = "none";
+    document.getElementById('single-recipe').style.display = "none";
     document.getElementById('add-recipes').style.display = "block";
     document.getElementById('login-container').style.display = "none";
   }
 
   goToLoginPage() {// TODO
+  }
+
+  showRecipe(e, recipe) {
+    document.getElementById('search-recipes').style.display = "none";
+    document.getElementById('recipes').style.display = "none";
+    document.getElementById('single-recipe').style.display = "block";
+    document.getElementById('add-recipes').style.display = "none";
+    document.getElementById('login-container').style.display = "none";
+
+    document.getElementById('recipe-name-show').innerHTML = recipe.name;
+    document.getElementById('servings-show').innerHTML = "Servings: " + recipe.servings;
+    document.getElementById('description-show').innerHTML = recipe.description;
+
+    let ingItem ;
+    recipe.ingredients.forEach(ing => {
+      ingItem = document.createElement('li');
+      ingItem.innerHTML = ing.name + ", " + ing.amount + " " + ing.unit;
+      document.getElementById("ingredients-list-show").appendChild(ingItem);
+    });
+
+    e.preventDefault();
+
   }
 
   showRecipes(data) {

@@ -32,6 +32,10 @@
   display: none;
 }
 
-#add-recipes {
+#single-recipe {
   display: block;
+}
+
+#add-recipes {
+  display: none;
 }
