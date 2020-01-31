@@ -52,6 +52,7 @@ class uiHandler {
   }
 
   addIngredientRow(e) {
+    e.preventDefault();
     const rowDiv = document.createElement('div');
     rowDiv.classList.add('form-row');
     rowDiv.classList.add('flex-nowrap');
@@ -59,6 +60,7 @@ class uiHandler {
     const ingredientDiv = document.createElement('div');
     const unitDiv = document.createElement('div');
     const amountDiv = document.createElement('div');
+    const minusDiv = document.createElement('div');
     
     ingredientDiv.classList.add('form-group');
     ingredientDiv.classList.add('col-md-7');
@@ -69,9 +71,13 @@ class uiHandler {
     unitDiv.classList.add('form-group');
     unitDiv.classList.add('col-md-2');
 
+    minusDiv.classList.add('form-group');
+    minusDiv.classList.add('col-md-1');
+
     const ingredientInput = document.createElement('input');
     const amountInput = document.createElement('input');
     const unitInput = document.createElement('input');
+    const minusButton = document.createElement('button');
 
     ingredientInput.classList.add('form-control');
     ingredientInput.id = "ingredients-input";
@@ -84,17 +90,33 @@ class uiHandler {
     unitInput.id = "units-input";
     unitInput.setAttribute("list", "unitList");
 
+    minusButton.classList.add('btn');
+    minusButton.classList.add('btn-primary');
+    minusButton.classList.add('btn-danger');
+    minusButton.classList.add('w-100');
+    minusButton.setAttribute('type', 'submit');
+    minusButton.innerHTML = '-';
+
     ingredientDiv.appendChild(ingredientInput);
     amountDiv.appendChild(amountInput);
     unitDiv.appendChild(unitInput);
+    minusDiv.appendChild(minusButton);
 
     rowDiv.appendChild(ingredientDiv);
     rowDiv.appendChild(amountDiv);
     rowDiv.appendChild(unitDiv);
+    rowDiv.append(minusDiv);
+
+    minusButton.addEventListener('click', e => this.removeIngredientRow(e, rowDiv));
 
     const ingredientList = document.getElementById("IngredientList");
     let childrenNumber = ingredientList.children.length;
     ingredientList.insertBefore(rowDiv, ingredientList.childNodes[childrenNumber]);
+    
+  }
+
+  removeIngredientRow(e, rowDiv) {
+    document.getElementById("IngredientList").removeChild(rowDiv);
     e.preventDefault();
   }
 
