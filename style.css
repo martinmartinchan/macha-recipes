@@ -29,11 +29,11 @@
 }
 
 #recipes {
-  display: none;
+  display: block;
 }
 
 #single-recipe {
-  display: block;
+  display: none;
 }
 
 #add-recipes {

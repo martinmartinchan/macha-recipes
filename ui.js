@@ -37,7 +37,6 @@ class uiHandler {
     });
 
     e.preventDefault();
-
   }
 
   showRecipes(data) {
@@ -70,6 +69,8 @@ class uiHandler {
       recipeCard.appendChild(header);
       recipeCard.appendChild(cardBody);
 
+      recipeCard.style.cursor = 'pointer';
+      recipeCard.addEventListener('click', e => this.showRecipe(e, recipe));
       document.getElementById('recipes').appendChild(recipeCard);
 
     });
