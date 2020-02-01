@@ -24,7 +24,15 @@ document.getElementById('submit-recipe-button').addEventListener('click', e => {
   const recipe = uH.submitRecipe();
   recipe['password'] = "Troglodon5986";
   hH.post(baseURL + "/addrecipe", recipe)
-    .then(data => console.log(data))
+    .then(data => {
+      if (data.success) {
+        uH.showStatus(true, data.message);
+        uH.showRecipe(recipe);
+        uH.clearAddRecipePage();
+      } else {
+        uH.showStatus(false, data.message);
+      }
+    })
     .catch(err => console.log(err));
   e.preventDefault();
 });

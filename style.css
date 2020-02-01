@@ -1,7 +1,3 @@
-#login-container {
-  display: none;
-}
-
 .main-container {
   display: block;
 }
@@ -22,6 +18,18 @@
   min-height: 100vh;
   display: flex;
   align-items: center;
+}
+
+#login-container {
+  display: none;
+}
+
+#status-success {
+  display: none;
+}
+
+#status-failed {
+  display: none;
 }
 
 #search-recipes {

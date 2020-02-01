@@ -18,7 +18,7 @@ class uiHandler {
   goToLoginPage() {// TODO
   }
 
-  showRecipe(e, recipe) {
+  showRecipe(recipe) {
     document.getElementById('search-recipes').style.display = 'none';
     document.getElementById('recipes').style.display = 'none';
     document.getElementById('single-recipe').style.display = 'block';
@@ -40,8 +40,6 @@ class uiHandler {
       ingItem.innerHTML = ing.name + ", " + ing.amount + " " + ing.unit;
       document.getElementById('ingredients-list-show').appendChild(ingItem);
     });
-
-    e.preventDefault();
   }
 
   showRecipes(data) {
@@ -75,7 +73,7 @@ class uiHandler {
       recipeCard.appendChild(cardBody);
 
       recipeCard.style.cursor = 'pointer';
-      recipeCard.addEventListener('click', e => this.showRecipe(e, recipe));
+      recipeCard.addEventListener('click', () => this.showRecipe(recipe));
       document.getElementById('recipes').appendChild(recipeCard);
 
     });
@@ -141,7 +139,7 @@ class uiHandler {
 
     const ingredientList = document.getElementById('ingredient-list');
     let childrenNumber = ingredientList.children.length;
-    ingredientList.insertBefore(rowDiv, ingredientList.childNodes[childrenNumber]);
+    ingredientList.insertBefore(rowDiv, ingredientList.children[childrenNumber - 1]);
     
   }
 
@@ -150,7 +148,7 @@ class uiHandler {
     e.preventDefault();
   }
 
-  submitRecipe(e, hH, url) {
+  submitRecipe() {
     let recipe = {};
     const recipeName = document.getElementById('recipe-name-input').value;
     const description = document.getElementById('recipe-description-input').value;
@@ -177,5 +175,32 @@ class uiHandler {
     recipe['ingredients'] = ingObjects;
 
     return recipe;
+  }
+
+  showStatus(success, message){
+    let status;
+    if (success) {
+      status = document.getElementById('status-success');
+    } else {
+      status = document.getElementById('status-failed');
+    }
+    status.innerHTML = message;
+    status.style.display = 'block';
+    setTimeout(() => {
+      status.style.display = 'none';
+    }, 5000);
+  }
+
+  clearAddRecipePage(){
+    document.getElementById('recipe-name-input').value = "";
+    document.getElementById('recipe-description-input').value = "";
+    document.getElementById('servings-input').value = "";
+    let ingredientList = document.getElementById('ingredient-list');
+    while (ingredientList.children.length > 2) {
+      ingredientList.removeChild(ingredientList.children[1]);
+    }
+    document.querySelector('#ingredients-input').value = "";
+    document.querySelector('#amount-input').value = "";
+    document.querySelector('#units-input').value = "";
   }
 }
