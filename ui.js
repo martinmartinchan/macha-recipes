@@ -29,6 +29,11 @@ class uiHandler {
     document.getElementById('servings-show').innerHTML = "Servings: " + recipe.servings;
     document.getElementById('description-show').innerHTML = recipe.description;
 
+    const ingredientsList = document.getElementById("ingredients-list-show");
+    while (ingredientsList.lastChild) {
+      ingredientsList.removeChild(ingredientsList.lastChild);
+    }
+
     let ingItem ;
     recipe.ingredients.forEach(ing => {
       ingItem = document.createElement('li');
