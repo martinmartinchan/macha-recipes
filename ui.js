@@ -18,7 +18,7 @@ class uiHandler {
   goToLoginPage() {// TODO
   }
 
-  showRecipe(recipe) {
+  showRecipe(recipe, hH, baseURL) {
     document.getElementById('search-recipes').style.display = 'none';
     document.getElementById('recipes').style.display = 'none';
     document.getElementById('single-recipe').style.display = 'block';
@@ -40,9 +40,36 @@ class uiHandler {
       ingItem.innerHTML = ing.name + ", " + ing.amount + " " + ing.unit;
       document.getElementById('ingredients-list-show').appendChild(ingItem);
     });
+
+    const deleteRecipeDiv = document.getElementById('delete-recipe-button');
+    while (deleteRecipeDiv.lastChild) {
+      deleteRecipeDiv.removeChild(deleteRecipeDiv.lastChild);
+    }
+
+    const deleteButton = document.createElement('button');
+    deleteButton.classList.add('btn');
+    deleteButton.classList.add('btn-danger');
+    deleteButton.innerHTML = "Delete Recipe";
+
+    deleteButton.addEventListener('click', e => {
+      const deleteInfo = {
+        'name': recipe.name,
+        'password': "Troglodon5986",
+      }
+      hH.put(baseURL + "/removerecipe", deleteInfo)
+        .then(data => {
+          this.showStatus(data.success, data.message);
+          if (data.success) {
+            this.goToRecipesPage();
+          }
+        })
+        .catch(err => console.log(err));
+      e.preventDefault()
+    });
+    deleteRecipeDiv.append(deleteButton);
   }
 
-  showRecipes(data) {
+  showRecipes(data, hH, baseURL) {
     const recipes = data.result.recipes;
     let recipeCard;
     let header;
@@ -73,7 +100,7 @@ class uiHandler {
       recipeCard.appendChild(cardBody);
 
       recipeCard.style.cursor = 'pointer';
-      recipeCard.addEventListener('click', () => this.showRecipe(recipe));
+      recipeCard.addEventListener('click', () => this.showRecipe(recipe, hH, baseURL));
       document.getElementById('recipes').appendChild(recipeCard);
 
     });

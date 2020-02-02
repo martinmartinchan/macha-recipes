@@ -10,7 +10,7 @@ document.getElementById('login-nav').addEventListener('click', uH.goToLoginPage)
 /** Get the data from the database and show it.
  */
 hH.get(baseURL + "/recipes")
-  .then(data => uH.showRecipes(data))
+  .then(data => uH.showRecipes(data, hH, baseURL))
   .catch(err => console.log(err));
 
 /** Make the add button for the add-recipe-page
@@ -25,12 +25,10 @@ document.getElementById('submit-recipe-button').addEventListener('click', e => {
   recipe['password'] = "Troglodon5986";
   hH.post(baseURL + "/addrecipe", recipe)
     .then(data => {
+      uH.showStatus(data.success, data.message);
       if (data.success) {
-        uH.showStatus(true, data.message);
-        uH.showRecipe(recipe);
+        uH.showRecipe(recipe, hH, baseURL);
         uH.clearAddRecipePage();
-      } else {
-        uH.showStatus(false, data.message);
       }
     })
     .catch(err => console.log(err));
