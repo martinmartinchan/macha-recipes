@@ -1,4 +1,4 @@
-class uiHandler {
+class UIHandler {
   goToRecipesPage() {
     document.getElementById('search-recipes').style.display = 'block';
     document.getElementById('recipes').style.display = 'block';
@@ -18,7 +18,7 @@ class uiHandler {
   goToLoginPage() {// TODO
   }
 
-  showRecipe(recipe, hH, baseURL) {
+  showRecipe(recipe) {
     document.getElementById('search-recipes').style.display = 'none';
     document.getElementById('recipes').style.display = 'none';
     document.getElementById('single-recipe').style.display = 'block';
@@ -53,10 +53,10 @@ class uiHandler {
 
     deleteButton.addEventListener('click', e => {
       const deleteInfo = {
-        'name': recipe.name,
-        'password': "Troglodon5986",
+        name: recipe.name,
+        password: cH.dummyPassword,
       }
-      hH.put(baseURL + "/removerecipe", deleteInfo)
+      cH.put("/removerecipe", deleteInfo)
         .then(data => {
           this.showStatus(data.success, data.message);
           if (data.success) {
@@ -69,7 +69,7 @@ class uiHandler {
     deleteRecipeDiv.append(deleteButton);
   }
 
-  showRecipes(data, hH, baseURL) {
+  showRecipes(data) {
     const recipes = data.result.recipes;
     let recipeCard;
     let header;
@@ -100,7 +100,7 @@ class uiHandler {
       recipeCard.appendChild(cardBody);
 
       recipeCard.style.cursor = 'pointer';
-      recipeCard.addEventListener('click', () => this.showRecipe(recipe, hH, baseURL));
+      recipeCard.addEventListener('click', () => this.showRecipe(recipe));
       document.getElementById('recipes').appendChild(recipeCard);
 
     });

@@ -1,6 +1,4 @@
-const hH = new httpHandler;
-const uH = new uiHandler;
-const baseURL = "https://martinchan.pythonanywhere.com";
+const uH = new UIHandler();
 /** Make the navbar navigate to corresponding page
  */
 document.getElementById('recipes-nav').addEventListener('click', uH.goToRecipesPage);
@@ -9,8 +7,8 @@ document.getElementById('login-nav').addEventListener('click', uH.goToLoginPage)
 
 /** Get the data from the database and show it.
  */
-hH.get(baseURL + "/recipes")
-  .then(data => uH.showRecipes(data, hH, baseURL))
+cH.get("/recipes")
+  .then(data => uH.showRecipes(data))
   .catch(err => console.log(err));
 
 /** Make the add button for the add-recipe-page
@@ -22,12 +20,12 @@ document.getElementById('addIngredientButton').addEventListener('click', e => uH
  */
 document.getElementById('submit-recipe-button').addEventListener('click', e => {
   const recipe = uH.submitRecipe();
-  recipe['password'] = "Troglodon5986";
-  hH.post(baseURL + "/addrecipe", recipe)
+  recipe['password'] = cH.dummyPassword;
+  cH.post("/addrecipe", recipe)
     .then(data => {
       uH.showStatus(data.success, data.message);
       if (data.success) {
-        uH.showRecipe(recipe, hH, baseURL);
+        uH.showRecipe(recipe);
         uH.clearAddRecipePage();
       }
     })
