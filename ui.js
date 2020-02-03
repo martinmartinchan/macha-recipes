@@ -146,7 +146,6 @@ class UIHandler {
     unitInput.setAttribute('list', 'unitList');
 
     minusButton.classList.add('btn');
-    minusButton.classList.add('btn-primary');
     minusButton.classList.add('btn-danger');
     minusButton.classList.add('w-100');
     minusButton.setAttribute('type', 'submit');
