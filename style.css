@@ -2,10 +2,6 @@
   display: block;
 }
 
-#login-container {
-  display: none;
-}
-
 #status-success {
   display: none;
 }
