@@ -4,7 +4,6 @@ class UIHandler {
     document.getElementById('recipes').style.display = 'block';
     document.getElementById('single-recipe').style.display = 'none';
     document.getElementById('add-recipe').style.display = 'none';
-    document.getElementById('login-container').style.display = 'none';
   }
   
   goToAddRecipePage() {
@@ -12,10 +11,6 @@ class UIHandler {
     document.getElementById('recipes').style.display = 'none';
     document.getElementById('single-recipe').style.display = 'none';
     document.getElementById('add-recipe').style.display = 'block';
-    document.getElementById('login-container').style.display = 'none';
-  }
-
-  goToLoginPage() {// TODO
   }
 
   showRecipe(recipe) {
@@ -23,8 +18,6 @@ class UIHandler {
     document.getElementById('recipes').style.display = 'none';
     document.getElementById('single-recipe').style.display = 'block';
     document.getElementById('add-recipe').style.display = 'none';
-    document.getElementById('login-container').style.display = 'none';
-
     document.getElementById('recipe-name-show').innerHTML = recipe.name;
     document.getElementById('servings-show').innerHTML = "Servings: " + recipe.servings;
     document.getElementById('description-show').innerHTML = recipe.description;

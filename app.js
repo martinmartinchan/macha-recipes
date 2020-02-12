@@ -11,7 +11,7 @@ cH.get("/recipes")
   .then(data => uH.showRecipes(data))
   .catch(err => console.log(err));
 
-/** Make the add button for the add-recipe-page
+/** Make the add button for the add-recipe page
  *  add a new row when clicked.
  */
 document.getElementById('addIngredientButton').addEventListener('click', e => uH.addIngredientRow(e));
