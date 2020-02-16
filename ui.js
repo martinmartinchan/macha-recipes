@@ -1,7 +1,7 @@
 class UIHandler {
   constructor () {
     document.getElementById('recipes-nav').addEventListener('click', () => {
-      history.pushState(null, "Macha Recipes", "/macha-recipes");
+      history.pushState(null, "Macha Recipes", "/macha-recipes/");
       this.goToRecipesPage();
     });
     document.getElementById('add-recipe-nav').addEventListener('click', () => {
@@ -36,10 +36,9 @@ class UIHandler {
   }
 
   deroute() {
-    console.log(location.pathname);
     if (location.pathname === "/macha-recipes/addrecipe") {
       this.goToAddRecipePage();
-    } else if (location.pathname === "/macha-recipes") {
+    } else if (location.pathname === "/macha-recipes/") {
       this.goToRecipesPage();
     }
   }
