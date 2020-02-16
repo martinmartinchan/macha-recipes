@@ -1,11 +1,12 @@
 class UIHandler {
-  constructor () {
+  constructor (recipes) {
+    this.recipes = recipes.result.recipes;
     document.getElementById('recipes-nav').addEventListener('click', () => {
-      history.pushState(null, "Macha Recipes", "/macha-recipes/");
+      history.pushState(null, "Macha Recipes", "/");
       this.goToRecipesPage();
     });
     document.getElementById('add-recipe-nav').addEventListener('click', () => {
-      history.pushState(null, "Add recipe", "/macha-recipes/addrecipe");
+      history.pushState(null, "Add recipe", "/addrecipe");
       this.goToAddRecipePage();
     });
 
@@ -36,11 +37,23 @@ class UIHandler {
   }
 
   deroute() {
-    if (location.pathname === "/macha-recipes/addrecipe") {
-      this.goToAddRecipePage();
-    } else if (location.pathname === "/macha-recipes/") {
-      this.goToRecipesPage();
-    }
+      let subPath = location.pathname;
+      subPath = subPath.slice(1).replace("%20", " ");
+      let recipeFound = false;
+      this.recipes.forEach(recipe => {
+        if (recipe.name === subPath) {
+          this.showRecipe(recipe);
+          recipeFound = true;
+          return;
+        }
+      });
+      if (!recipeFound) {
+        if (subPath === "addrecipe") {
+          this.goToAddRecipePage();
+        } else {
+          this.goToRecipesPage();
+        }
+      }
   }
 
   goToRecipesPage() {
@@ -106,13 +119,12 @@ class UIHandler {
     deleteRecipeDiv.append(deleteButton);
   }
 
-  showRecipes(data) {
-    const recipes = data.result.recipes;
+  showRecipes() {
     let recipeCard;
     let header;
     let cardBody;
     let descriptionText;
-    recipes.forEach(recipe => {
+    this.recipes.forEach(recipe => {
       recipeCard = document.createElement('div');
       recipeCard.classList.add('card');
       recipeCard.classList.add('w-75');
@@ -137,7 +149,11 @@ class UIHandler {
       recipeCard.appendChild(cardBody);
 
       recipeCard.style.cursor = 'pointer';
-      recipeCard.addEventListener('click', () => this.showRecipe(recipe));
+      recipeCard.addEventListener('click', e => {
+        history.pushState(null, recipe.name, "/" + recipe.name);
+        this.showRecipe(recipe)
+        e.preventDefault();
+      });
       document.getElementById('recipes').appendChild(recipeCard);
 
     });

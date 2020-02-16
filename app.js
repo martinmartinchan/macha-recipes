@@ -1,9 +1,12 @@
-const uH = new UIHandler();
+
 
 /** Get the data from the database and show it.
  */
 cH.get("/recipes")
-  .then(data => uH.showRecipes(data))
+  .then(data => {
+    const uH = new UIHandler(data);
+    uH.showRecipes();
+  })
   .catch(err => console.log(err));
 
 
