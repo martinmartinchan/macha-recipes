@@ -1,4 +1,48 @@
 class UIHandler {
+  constructor () {
+    document.getElementById('recipes-nav').addEventListener('click', () => {
+      history.pushState(null, "Macha Recipes", "/");
+      this.goToRecipesPage();
+    });
+    document.getElementById('add-recipe-nav').addEventListener('click', () => {
+      history.pushState(null, "Add recipe", "/addrecipe");
+      this.goToAddRecipePage();
+    });
+
+    document.getElementById('addIngredientButton').addEventListener('click', e => this.addIngredientRow(e));
+
+    document.getElementById('submit-recipe-button').addEventListener('click', e => {
+      const recipe = this.submitRecipe();
+      recipe['password'] = cH.dummyPassword;
+      cH.post("/addrecipe", recipe)
+        .then(data => {
+          this.showStatus(data.success, data.message);
+          if (data.success) {
+            this.showRecipe(recipe);
+            this.clearAddRecipePage();
+          }
+        })
+        .catch(err => console.log(err));
+      e.preventDefault();
+    });
+
+    window.addEventListener('popstate', e => this.goToCorrectPage(e));
+    this.deroute();
+  }
+
+  goToCorrectPage(e) {
+    this.deroute();
+    e.preventDefault();
+  }
+
+  deroute() {
+    if (location.pathname === "/addrecipe") {
+      this.goToAddRecipePage();
+    } else if (location.pathname === "/") {
+      this.goToRecipesPage();
+    }
+  }
+
   goToRecipesPage() {
     document.getElementById('search-recipes').style.display = 'block';
     document.getElementById('recipes').style.display = 'block';
