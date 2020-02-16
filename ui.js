@@ -1,11 +1,11 @@
 class UIHandler {
   constructor () {
     document.getElementById('recipes-nav').addEventListener('click', () => {
-      history.pushState(null, "Macha Recipes", "/");
+      history.pushState(null, "Macha Recipes", "/macha-recipes");
       this.goToRecipesPage();
     });
     document.getElementById('add-recipe-nav').addEventListener('click', () => {
-      history.pushState(null, "Add recipe", "/addrecipe");
+      history.pushState(null, "Add recipe", "/macha-recipes/addrecipe");
       this.goToAddRecipePage();
     });
 
@@ -36,9 +36,9 @@ class UIHandler {
   }
 
   deroute() {
-    if (location.pathname === "/addrecipe") {
+    if (location.pathname === "/macha-recipes/addrecipe") {
       this.goToAddRecipePage();
-    } else if (location.pathname === "/") {
+    } else if (location.pathname === "/macha-recipes") {
       this.goToRecipesPage();
     }
   }
