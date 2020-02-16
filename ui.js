@@ -36,7 +36,7 @@ class UIHandler {
   }
 
   deroute() {
-    console.log("hejhej");
+    console.log(location.pathname);
     if (location.pathname === "/macha-recipes/addrecipe") {
       this.goToAddRecipePage();
     } else if (location.pathname === "/macha-recipes") {
