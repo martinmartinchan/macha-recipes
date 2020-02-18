@@ -37,23 +37,23 @@ class UIHandler {
   }
 
   deroute() {
-      let subPath = location.pathname;
-      subPath = subPath.slice(1).replace("%20", " ");
-      let recipeFound = false;
-      this.recipes.forEach(recipe => {
-        if (recipe.name === subPath) {
-          this.showRecipe(recipe);
-          recipeFound = true;
-          return;
-        }
-      });
-      if (!recipeFound) {
-        if (subPath === "addrecipe") {
-          this.goToAddRecipePage();
-        } else {
-          this.goToRecipesPage();
-        }
+    let subPath = location.pathname;
+    subPath = subPath.slice(1).replace("%20", " ");
+    let recipeFound = false;
+    this.recipes.forEach(recipe => {
+      if (recipe.name === subPath) {
+        this.showRecipe(recipe);
+        recipeFound = true;
+        return;
       }
+    });
+    if (!recipeFound) {
+      if (subPath === "addrecipe") {
+        this.goToAddRecipePage();
+      } else {
+        this.goToRecipesPage();
+      }
+    }
   }
 
   goToRecipesPage() {
