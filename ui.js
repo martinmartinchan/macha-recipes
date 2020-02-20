@@ -10,22 +10,8 @@ class UIHandler {
       this.goToAddRecipePage();
     });
 
-    document.getElementById('addIngredientButton').addEventListener('click', e => this.addIngredientRow(e));
-
-    document.getElementById('submit-recipe-button').addEventListener('click', e => {
-      const recipe = this.submitRecipe();
-      recipe['password'] = cH.dummyPassword;
-      cH.post("/addrecipe", recipe)
-        .then(data => {
-          this.showStatus(data.success, data.message);
-          if (data.success) {
-            this.showRecipe(recipe);
-            this.clearAddRecipePage();
-          }
-        })
-        .catch(err => console.log(err));
-      e.preventDefault();
-    });
+    this.populateRecipesPage();
+    this.populateAddRecipePage();
 
     window.addEventListener('popstate', e => this.goToCorrectPage(e));
     this.deroute();
@@ -119,7 +105,7 @@ class UIHandler {
     deleteRecipeDiv.append(deleteButton);
   }
 
-  showRecipes() {
+  populateRecipesPage() {
     let recipeCard;
     let header;
     let cardBody;
@@ -155,7 +141,25 @@ class UIHandler {
         e.preventDefault();
       });
       document.getElementById('recipes').appendChild(recipeCard);
+    });
+  }
 
+  populateAddRecipePage() {
+    document.getElementById('addIngredientButton').addEventListener('click', e => this.addIngredientRow(e));
+
+    document.getElementById('submit-recipe-button').addEventListener('click', e => {
+      const recipe = this.submitRecipe();
+      recipe['password'] = cH.dummyPassword;
+      cH.post("/addrecipe", recipe)
+        .then(data => {
+          this.showStatus(data.success, data.message);
+          if (data.success) {
+            this.showRecipe(recipe);
+            this.clearAddRecipePage();
+          }
+        })
+        .catch(err => console.log(err));
+      e.preventDefault();
     });
   }
 
