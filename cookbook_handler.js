@@ -13,14 +13,15 @@ class CookbookHandler {
     })
   }
 
-  post(extension, data) {
+  addRecipe(recipe) {
+    recipe['password'] = this.dummyPassword;
     return new Promise((resolve, reject) => {
-      fetch(this.baseURL + extension, {
+      fetch(this.baseURL + "/addrecipe", {
         method: 'POST',
         headers: {
           'Content-type': 'application/json'
         },
-        body: JSON.stringify(data)
+        body: JSON.stringify(recipe)
       })
       .then(res => res.json())
       .then(data => resolve(data))
@@ -28,9 +29,10 @@ class CookbookHandler {
     })
   }
 
-  put(extension, data) {
+  deleteRecipe(data) {
+    data['password'] = this.dummyPassword;
     return new Promise ((resolve, reject) => {
-      fetch(this.baseURL + extension, {
+      fetch(this.baseURL + "/removerecipe", {
         method: 'PUT',
         headers: {
           'Content-type': 'application/json'

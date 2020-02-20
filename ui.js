@@ -1,6 +1,6 @@
 class UIHandler {
-  constructor (recipes) {
-    this.recipes = recipes.result.recipes;
+  constructor (data) {
+    this.recipes = data.result.recipes;
     document.getElementById('recipes-nav').addEventListener('click', () => {
       history.pushState(null, "Macha Recipes", "/");
       this.goToRecipesPage();
@@ -56,6 +56,16 @@ class UIHandler {
     document.getElementById('add-recipe').style.display = 'block';
   }
 
+  refresh(callback) {
+    cH.get()
+      .then(data => {
+        this.recipes = data.result.recipes;
+        this.populateRecipesPage();
+        callback;
+      })
+      .catch(err => console.log(err));
+  }
+
   showRecipe(recipe) {
     document.getElementById('search-recipes').style.display = 'none';
     document.getElementById('recipes').style.display = 'none';
@@ -88,15 +98,12 @@ class UIHandler {
     deleteButton.innerHTML = "Delete Recipe";
 
     deleteButton.addEventListener('click', e => {
-      const deleteInfo = {
-        name: recipe.name,
-        password: cH.dummyPassword,
-      }
-      cH.put("/removerecipe", deleteInfo)
+      let data = {name: recipe.name}
+      cH.deleteRecipe(data)
         .then(data => {
           this.showStatus(data.success, data.message);
           if (data.success) {
-            this.goToRecipesPage();
+            this.refresh(this.goToRecipesPage());
           }
         })
         .catch(err => console.log(err));
@@ -106,6 +113,11 @@ class UIHandler {
   }
 
   populateRecipesPage() {
+    const mainRecipeDiv = document.getElementById('recipes');
+    while (mainRecipeDiv.children.length > 0) {
+      mainRecipeDiv.removeChild(mainRecipeDiv.children[0]);
+    }
+
     let recipeCard;
     let header;
     let cardBody;
@@ -140,7 +152,7 @@ class UIHandler {
         this.showRecipe(recipe)
         e.preventDefault();
       });
-      document.getElementById('recipes').appendChild(recipeCard);
+      mainRecipeDiv.appendChild(recipeCard);
     });
   }
 
@@ -148,14 +160,13 @@ class UIHandler {
     document.getElementById('addIngredientButton').addEventListener('click', e => this.addIngredientRow(e));
 
     document.getElementById('submit-recipe-button').addEventListener('click', e => {
-      const recipe = this.submitRecipe();
-      recipe['password'] = cH.dummyPassword;
-      cH.post("/addrecipe", recipe)
+      const recipe = this.parseRecipeToSubmit();
+      cH.addRecipe(recipe)
         .then(data => {
           this.showStatus(data.success, data.message);
           if (data.success) {
-            this.showRecipe(recipe);
             this.clearAddRecipePage();
+            this.refresh(this.showRecipe(recipe));
           }
         })
         .catch(err => console.log(err));
@@ -231,7 +242,7 @@ class UIHandler {
     e.preventDefault();
   }
 
-  submitRecipe() {
+  parseRecipeToSubmit() {
     let recipe = {};
     const recipeName = document.getElementById('recipe-name-input').value;
     const description = document.getElementById('recipe-description-input').value;
