@@ -1,5 +1,3 @@
-
-
 /** Get the data from the database and show it.
  */
 cH.get()

@@ -26,13 +26,15 @@ class UIHandler {
     let subPath = location.pathname;
     subPath = subPath.slice(1).replace("%20", " ");
     let recipeFound = false;
-    this.recipes.forEach(recipe => {
-      if (recipe.name === subPath) {
-        this.showRecipe(recipe);
-        recipeFound = true;
-        return;
-      }
-    });
+    if (typeof this.recipes != 'undefined') {
+      this.recipes.forEach(recipe => {
+        if (recipe.name === subPath) {
+          this.showRecipe(recipe);
+          recipeFound = true;
+          return;
+        }
+      });
+    }
     if (!recipeFound) {
       if (subPath === "addrecipe") {
         this.goToAddRecipePage();
@@ -117,43 +119,58 @@ class UIHandler {
     while (mainRecipeDiv.children.length > 0) {
       mainRecipeDiv.removeChild(mainRecipeDiv.children[0]);
     }
-
-    let recipeCard;
-    let header;
-    let cardBody;
-    let descriptionText;
-    this.recipes.forEach(recipe => {
-      recipeCard = document.createElement('div');
-      recipeCard.classList.add('card');
-      recipeCard.classList.add('w-75');
-      recipeCard.classList.add('mt-3');
+    if (typeof this.recipes === 'undefined') {
+      let emptyCard;
+      let header;
+      emptyCard = document.createElement('div');
+      emptyCard.classList.add('card');
+      emptyCard.classList.add('w-75');
+      emptyCard.classList.add('mt-3');
 
       header = document.createElement('h5');
       header.classList.add('card-header');
-      header.appendChild(document.createTextNode(recipe.name));
-      header.style.textAlign = 'left';
+      header.appendChild(document.createTextNode("Cookbook is empty"));
 
-      cardBody = document.createElement('div');
-      cardBody.classList.add('card-body');
-      cardBody.style.textAlign = 'left';
-
-      descriptionText = document.createElement('p');
-      descriptionText.classList.add('card-text');
-      descriptionText.appendChild(document.createTextNode(recipe.description));
-
-      cardBody.appendChild(descriptionText);
-
-      recipeCard.appendChild(header);
-      recipeCard.appendChild(cardBody);
-
-      recipeCard.style.cursor = 'pointer';
-      recipeCard.addEventListener('click', e => {
-        history.pushState(null, recipe.name, "/" + recipe.name);
-        this.showRecipe(recipe)
-        e.preventDefault();
+      emptyCard.appendChild(header);
+      mainRecipeDiv.appendChild(emptyCard);
+    } else {
+      let recipeCard;
+      let header;
+      let cardBody;
+      let descriptionText;
+      this.recipes.forEach(recipe => {
+        recipeCard = document.createElement('div');
+        recipeCard.classList.add('card');
+        recipeCard.classList.add('w-75');
+        recipeCard.classList.add('mt-3');
+  
+        header = document.createElement('h5');
+        header.classList.add('card-header');
+        header.appendChild(document.createTextNode(recipe.name));
+        header.style.textAlign = 'left';
+  
+        cardBody = document.createElement('div');
+        cardBody.classList.add('card-body');
+        cardBody.style.textAlign = 'left';
+  
+        descriptionText = document.createElement('p');
+        descriptionText.classList.add('card-text');
+        descriptionText.appendChild(document.createTextNode(recipe.description));
+  
+        cardBody.appendChild(descriptionText);
+  
+        recipeCard.appendChild(header);
+        recipeCard.appendChild(cardBody);
+  
+        recipeCard.style.cursor = 'pointer';
+        recipeCard.addEventListener('click', e => {
+          history.pushState(null, recipe.name, "/" + recipe.name);
+          this.showRecipe(recipe)
+          e.preventDefault();
+        });
+        mainRecipeDiv.appendChild(recipeCard);
       });
-      mainRecipeDiv.appendChild(recipeCard);
-    });
+    }
   }
 
   populateAddRecipePage() {
