@@ -55,6 +55,9 @@
         <h5>Ingredients</h5>
         <ul class="w-75" id="ingredients-list-show">
         </ul>
+        <h5>Instructions</h5>
+        <ul class="w-75" id="instructions-list-show">
+        </ul>
         <div class="form-group w-75" id="delete-recipe-button" align="right"></div>
       </div>
 
@@ -113,6 +116,30 @@
               </div>
               <div class="form-group col-md-1">
                 <button type="submit" id="addIngredientButton" class="btn btn-primary w-100">+</button>
+              </div>
+            </div>
+          </div>
+
+          <!-- Instructions -->
+          <div class="w-75" align="left" id=instruction-list>
+            <label for="instruction-input">Instructions</label>
+            <div class="form-row align-items-end flex-nowrap">
+              <div class="form-group col-md-1 align-self-center" align="center">
+                <span id="instruction-step">1.</span>
+              </div>
+              <div class="form-group col-md-9">
+                <textarea class="form-control" id="instruction-input" rows="2"></textarea>
+              </div>
+            </div>
+            <div class="form-row align-items-end flex-nowrap">
+              <div class="form-group col-md-1 align-self-center" align="center">
+                <span id="read-only-instruction-number">2.</span>
+              </div>
+              <div class="form-group col-md-9">
+                <textarea class="form-control" rows="2" readonly></textarea>
+              </div>
+              <div class="form-group col-md-1">
+                <button type="submit" id="addInstructionButton" class="btn btn-primary w-100">+</button>
               </div>
             </div>
           </div>
