@@ -45,10 +45,39 @@
 }
 
 .btn-primary {
-  background-color: #3dc624;
-  border-color: #3dc624;
+  background-color: rgba(61, 198, 36, 1);
+  border-color: rgba(61, 198, 36, 1);
 }
 .btn-primary:hover {
-  background-color: #37b521;
-  border-color: #37b521;
+  background-color: rgba(55, 181, 33, 1);
+  border-color: rgba(55, 181, 33, 1);
+}
+
+table {
+  table-layout: fixed;
+}
+
+.ingredient-col {
+ width: 70%;
+}
+
+.amount-col {
+ width: 30%;
+}
+
+.tr-primary {
+  background-color: rgba(61, 198, 36, 0.35);
+  cursor: pointer;
+}
+
+.tr-primary:hover {
+  background-color: rgba(55, 181, 33, 0.35);
+}
+
+.tr-nothing {
+  cursor: pointer;
+}
+
+.tr-nothing:hover {
+  background-color: rgba(238, 238, 238, 0.35);
 }

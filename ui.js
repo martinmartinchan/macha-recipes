@@ -84,10 +84,30 @@ class UIHandler {
     }
 
     let ingItem;
+    let ingName;
+    let ingAmount;
+    let counter = 0;
     recipe.ingredients.forEach(ing => {
-      ingItem = document.createElement('li');
-      ingItem.innerHTML = ing.name + ", " + ing.amount + " " + ing.unit;
+      ingItem = document.createElement('tr');
+      if (counter % 2) {
+        ingItem.classList.add('tr-primary');
+      } else {
+        ingItem.classList.add('tr-nothing');
+      }
+
+      ingName = document.createElement('td');
+      ingAmount = document.createElement('td');
+      if (counter === 0) {
+        ingName.classList.add('ingredient-col');
+        ingAmount.classList.add('amount-col');
+      }
+      ingName.innerHTML = ing.name;
+      ingAmount.innerHTML = ing.amount + " " + ing.unit;
+
+      ingItem.appendChild(ingName);
+      ingItem.appendChild(ingAmount);
       document.getElementById('ingredients-list-show').appendChild(ingItem);
+      counter++;
     });
 
     const instructionList = document.getElementById('instructions-list-show');
@@ -96,9 +116,26 @@ class UIHandler {
     }
 
     let instItem;
+    let stepItem;
+    let instructionText;
     recipe.instructions.forEach(inst => {
-      instItem = document.createElement('li');
-      instItem.innerHTML = inst.step + ". " + inst.instruction;
+      instItem = document.createElement('div');
+      instItem.classList.add('row');
+      instItem.classList.add('mb-3');
+      instItem.classList.add('ml-3');
+
+      stepItem = document.createElement('div');
+      stepItem.classList.add('col-1');
+      stepItem.classList.add('align-self-center');
+      stepItem.style.textAlign = 'center';
+      stepItem.innerHTML = inst.step + ".";
+
+      instructionText = document.createElement('div');
+      instructionText.classList.add('col-11');
+      instructionText.innerHTML = inst.instruction;
+
+      instItem.appendChild(stepItem);
+      instItem.appendChild(instructionText);
       document.getElementById('instructions-list-show').appendChild(instItem);
     });
 
