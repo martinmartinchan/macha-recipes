@@ -48,6 +48,7 @@
   background-color: rgba(61, 198, 36, 1);
   border-color: rgba(61, 198, 36, 1);
 }
+
 .btn-primary:hover {
   background-color: rgba(55, 181, 33, 1);
   border-color: rgba(55, 181, 33, 1);
@@ -81,3 +82,4 @@ table {
 .tr-nothing:hover {
   background-color: rgba(238, 238, 238, 0.35);
 }
+
