@@ -1,25 +1,57 @@
 class UIHandler {
   constructor (data) {
+    this.editingRecipe = false;
     this.recipes = data.result.recipes;
     document.getElementById('recipes-nav').addEventListener('click', () => {
-      history.pushState(null, "Macha Recipes", "/");
-      this.goToRecipesPage();
+      if (this.editingRecipe) {
+        if (confirm("Quit editing recipe?")) {
+          this.editingRecipe = false;
+          this.clearAddRecipePage();
+          history.pushState(null, "Macha Recipes", "/");
+          this.goToRecipesPage();
+        }
+      } else {
+        history.pushState(null, "Macha Recipes", "/");
+        this.goToRecipesPage();
+      }
     });
     document.getElementById('add-recipe-nav').addEventListener('click', () => {
-      history.pushState(null, "Add recipe", "/addrecipe");
-      this.goToAddRecipePage();
+      if (this.editingRecipe) {
+        if (confirm("Quit editing recipe?")) {
+          this.editingRecipe = false;
+          this.clearAddRecipePage();
+          history.pushState(null, "Add recipe", "/addrecipe");
+          this.goToAddRecipePage();
+        }
+      } else {
+        history.pushState(null, "Add recipe", "/addrecipe");
+        this.goToAddRecipePage();
+      }
     });
 
     this.populateRecipesPage();
-    this.populateAddRecipePage();
+    document.getElementById('addIngredientButton').addEventListener('click', e => {
+      this.addIngredientRow();
+      e.preventDefault();
+    });
+    document.getElementById('addInstructionButton').addEventListener('click', e => {
+      this.addInstructionRow();
+      e.preventDefault();
+    });
 
-    window.addEventListener('popstate', e => this.goToCorrectPage(e));
+    window.addEventListener('popstate', e => {
+      if (this.editingRecipe) {
+        if (confirm("Quit editing recipe?")) {
+          this.editingRecipe = false;
+          this.clearAddRecipePage();
+          this.deroute();
+        }
+      } else {
+        this.deroute();
+      }
+      e.preventDefault();
+    });
     this.deroute();
-  }
-
-  goToCorrectPage(e) {
-    this.deroute();
-    e.preventDefault();
   }
 
   deroute() {
@@ -48,14 +80,95 @@ class UIHandler {
     document.getElementById('search-recipes').style.display = 'block';
     document.getElementById('recipes').style.display = 'block';
     document.getElementById('single-recipe').style.display = 'none';
-    document.getElementById('add-recipe').style.display = 'none';
+    document.getElementById('add-or-edit-recipe').style.display = 'none';
   }
   
   goToAddRecipePage() {
     document.getElementById('search-recipes').style.display = 'none';
     document.getElementById('recipes').style.display = 'none';
     document.getElementById('single-recipe').style.display = 'none';
-    document.getElementById('add-recipe').style.display = 'block';
+    document.getElementById('add-or-edit-recipe').style.display = 'block';
+
+    const buttonDiv = document.getElementById('submit-recipe-button-div');
+    while (buttonDiv.lastChild) {
+      buttonDiv.removeChild(buttonDiv.lastChild);
+    }
+
+    const submitButton = document.createElement('button');
+    submitButton.classList.add('btn');
+    submitButton.classList.add('btn-primary');
+    submitButton.type = 'submit';
+    submitButton.innerHTML = "Add Recipe";
+    submitButton.addEventListener('click', e => {
+      const recipe = this.parseRecipeToSubmit();
+      cH.addRecipe(recipe)
+        .then(data => {
+          this.showStatus(data.success, data.message);
+          if (data.success) {
+            this.clearAddRecipePage();
+            this.refresh(this.showRecipe(recipe));
+          }
+        })
+        .catch(err => console.log(err));
+      e.preventDefault();
+    });
+    buttonDiv.appendChild(submitButton);
+  }
+
+  goToEditRecipePage(recipe) {
+    document.getElementById('search-recipes').style.display = 'none';
+    document.getElementById('recipes').style.display = 'none';
+    document.getElementById('single-recipe').style.display = 'none';
+    document.getElementById('add-or-edit-recipe').style.display = 'block';
+    this.editingRecipe = true;
+
+    document.getElementById('recipe-name-input').value = recipe.name;
+    document.getElementById('recipe-description-input').value = recipe.description;
+    document.getElementById('servings-input').value = recipe.servings;
+    
+    let ingredientList = document.getElementById('ingredient-list');
+    for (let i = 0; i < recipe.ingredients.length - 1; i++) {
+      this.addIngredientRow();
+    }
+    for (let i = 0; i < recipe.ingredients.length; i++) {
+      ingredientList.getElementsByClassName('ingredients-input')[i].value = recipe.ingredients[i].name;
+      ingredientList.getElementsByClassName('amount-input')[i].value = recipe.ingredients[i].amount;
+      ingredientList.getElementsByClassName('units-input')[i].value = recipe.ingredients[i].unit;
+    }
+
+    let instructionList = document.getElementById('instruction-list');
+    for (let i = 0; i < recipe.instructions.length - 1; i++) {
+      this.addInstructionRow();
+    }
+    for (let i = 0; i < recipe.instructions.length; i++) {
+      let step = parseInt(recipe.instructions[i].step);
+      instructionList.getElementsByClassName('instruction-input')[step - 1].value = recipe.instructions[i].instruction;
+    }
+
+    const buttonDiv = document.getElementById('submit-recipe-button-div');
+    while (buttonDiv.lastChild) {
+      buttonDiv.removeChild(buttonDiv.lastChild);
+    }
+    const submitButton = document.createElement('button');
+    submitButton.classList.add('btn');
+    submitButton.classList.add('btn-primary');
+    submitButton.type = 'submit';
+    submitButton.innerHTML = "Submit Changes";
+    submitButton.addEventListener('click', e => {
+      const editedRecipe = this.parseRecipeToSubmit();
+      cH.editRecipe(recipe.name, editedRecipe)
+        .then(data => {
+          this.showStatus(data.success, data.message);
+          if (data.success) {
+            this.editingRecipe = false;
+            this.clearAddRecipePage();
+            this.refresh(this.showRecipe(editedRecipe));
+          }
+        })
+        .catch(err => console.log(err));
+      e.preventDefault();
+    });
+    buttonDiv.appendChild(submitButton);
   }
 
   refresh(callback) {
@@ -72,7 +185,7 @@ class UIHandler {
     document.getElementById('search-recipes').style.display = 'none';
     document.getElementById('recipes').style.display = 'none';
     document.getElementById('single-recipe').style.display = 'block';
-    document.getElementById('add-recipe').style.display = 'none';
+    document.getElementById('add-or-edit-recipe').style.display = 'none';
 
     document.getElementById('recipe-name-show').innerHTML = recipe.name;
     document.getElementById('servings-show').innerHTML = "Servings: " + recipe.servings;
@@ -139,16 +252,25 @@ class UIHandler {
       document.getElementById('instructions-list-show').appendChild(instItem);
     });
 
-    const deleteRecipeDiv = document.getElementById('delete-recipe-button');
-    while (deleteRecipeDiv.lastChild) {
-      deleteRecipeDiv.removeChild(deleteRecipeDiv.lastChild);
+    const editRecipeDiv = document.getElementById('edit-recipe-button');
+    while (editRecipeDiv.lastChild) {
+      editRecipeDiv.removeChild(editRecipeDiv.lastChild);
     }
+
+    const editButton = document.createElement('button');
+    editButton.classList.add('btn');
+    editButton.classList.add('btn-primary');
+    editButton.classList.add('mr-3');
+    editButton.innerHTML = "Edit Recipe";
+    editButton.addEventListener('click', e => {
+      this.goToEditRecipePage(recipe);
+      e.preventDefault()
+    });
 
     const deleteButton = document.createElement('button');
     deleteButton.classList.add('btn');
     deleteButton.classList.add('btn-danger');
     deleteButton.innerHTML = "Delete Recipe";
-
     deleteButton.addEventListener('click', e => {
       let data = {name: recipe.name}
       cH.deleteRecipe(data)
@@ -161,7 +283,9 @@ class UIHandler {
         .catch(err => console.log(err));
       e.preventDefault()
     });
-    deleteRecipeDiv.append(deleteButton);
+
+    editRecipeDiv.append(editButton);
+    editRecipeDiv.append(deleteButton);
   }
 
   populateRecipesPage() {
@@ -223,26 +347,7 @@ class UIHandler {
     }
   }
 
-  populateAddRecipePage() {
-    document.getElementById('addIngredientButton').addEventListener('click', e => this.addIngredientRow(e));
-    document.getElementById('addInstructionButton').addEventListener('click', e => this.addInstructionRow(e));
-
-    document.getElementById('submit-recipe-button').addEventListener('click', e => {
-      const recipe = this.parseRecipeToSubmit();
-      cH.addRecipe(recipe)
-        .then(data => {
-          this.showStatus(data.success, data.message);
-          if (data.success) {
-            this.clearAddRecipePage();
-            this.refresh(this.showRecipe(recipe));
-          }
-        })
-        .catch(err => console.log(err));
-      e.preventDefault();
-    });
-  }
-
-  addIngredientRow(e) {
+  addIngredientRow() {
     const rowDiv = document.createElement('div');
     rowDiv.classList.add('form-row');
     rowDiv.classList.add('flex-nowrap');
@@ -270,14 +375,14 @@ class UIHandler {
     const minusButton = document.createElement('button');
 
     ingredientInput.classList.add('form-control');
-    ingredientInput.id = 'ingredients-input';
+    ingredientInput.classList.add('ingredients-input');
 
     amountInput.classList.add('form-control');
-    amountInput.id = 'amount-input';
+    amountInput.classList.add('amount-input');
     amountInput.setAttribute('type', 'number');
 
     unitInput.classList.add('form-control');
-    unitInput.id = 'units-input';
+    unitInput.classList.add('units-input');
     unitInput.setAttribute('list', 'unitList');
 
     minusButton.classList.add('btn');
@@ -301,11 +406,9 @@ class UIHandler {
     const ingredientList = document.getElementById('ingredient-list');
     let childrenNumber = ingredientList.childElementCount;
     ingredientList.insertBefore(rowDiv, ingredientList.children[childrenNumber - 1]);
-
-    e.preventDefault();
   }
 
-  addInstructionRow(e) {
+  addInstructionRow() {
     const rowDiv = document.createElement('div');
     rowDiv.classList.add('form-row');
     rowDiv.classList.add('align-items-end');
@@ -318,7 +421,7 @@ class UIHandler {
     stepDiv.style.textAlign = 'center';
 
     const stepNumber = document.createElement('span');
-    stepNumber.id = 'instruction-step';
+    stepNumber.classList.add('instruction-step');
     stepNumber.innerHTML = (document.getElementById('instruction-list').childElementCount - 1) + ".";
 
     const inputDiv = document.createElement('div');
@@ -327,7 +430,7 @@ class UIHandler {
 
     const inputTextArea = document.createElement('textarea');
     inputTextArea.classList.add('form-control');
-    inputTextArea.id = 'instruction-input';
+    inputTextArea.classList.add('instruction-input');
     inputTextArea.style.rows = 2;
 
     const buttonDiv = document.createElement('div');
@@ -355,8 +458,6 @@ class UIHandler {
     let childrenNumber = instructionList.children.length;
     instructionList.insertBefore(rowDiv, instructionList.children[childrenNumber - 1]);
     document.getElementById('read-only-instruction-number').innerHTML = childrenNumber;
-
-    e.preventDefault();
   }
 
   removeIngredientRow(e, rowDiv) {
@@ -366,7 +467,7 @@ class UIHandler {
 
   removeInstructionRow(e, rowDiv) {
     document.getElementById('instruction-list').removeChild(rowDiv);
-    this.updateInstructionSteps()
+    this.updateInstructionSteps();
     e.preventDefault();
   }
 
@@ -390,9 +491,9 @@ class UIHandler {
     let ing;
     for (let i = 0; i < ingredientList.childElementCount - 1; i++) {
       ing = {
-        name: ingredientList.children[i].querySelectorAll('#ingredients-input')[0].value,
-        amount: ingredientList.children[i].querySelectorAll('#amount-input')[0].value,
-        unit: ingredientList.children[i].querySelectorAll('#units-input')[0].value,
+        name: ingredientList.children[i].querySelectorAll('.ingredients-input')[0].value,
+        amount: ingredientList.children[i].querySelectorAll('.amount-input')[0].value,
+        unit: ingredientList.children[i].querySelectorAll('.units-input')[0].value,
       }
       ingObjects.push(ing);
     }
@@ -401,11 +502,11 @@ class UIHandler {
     let inst;
 
     for (let i = 1; i < instructionList.childElementCount - 1; i++) {
-      let stringStep = instructionList.children[i].querySelectorAll('#instruction-step')[0].innerText;
+      let stringStep = instructionList.children[i].querySelectorAll('.instruction-step')[0].innerText;
       let intStep = parseInt(/\d+/g.exec(stringStep)[0]);
       inst = {
         step: intStep,
-        instruction: instructionList.children[i].querySelectorAll('#instruction-input')[0].value,
+        instruction: instructionList.children[i].querySelectorAll('.instruction-input')[0].value,
       }
       instObjects.push(inst);
     }
@@ -441,8 +542,15 @@ class UIHandler {
     while (ingredientList.children.length > 2) {
       ingredientList.removeChild(ingredientList.children[1]);
     }
-    document.querySelector('#ingredients-input').value = "";
-    document.querySelector('#amount-input').value = "";
-    document.querySelector('#units-input').value = "";
+    document.querySelector('.ingredients-input').value = "";
+    document.querySelector('.amount-input').value = "";
+    document.querySelector('.units-input').value = "";
+
+    let instructionList = document.getElementById('instruction-list');
+    while (instructionList.children.length > 3) {
+      instructionList.removeChild(instructionList.children[2]);
+    }
+    document.querySelector('.instruction-input').value = "";
+    this.updateInstructionSteps();
   }
 }

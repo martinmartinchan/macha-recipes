@@ -71,12 +71,12 @@
 
           <div class="col-8" id="instructions-list-show">
           </div>
-          <div class="form-group w-75" id="delete-recipe-button" align="right"></div>
         </div>
+        <div class="form-group w-75" id="edit-recipe-button" align="right"></div>
       </div>
 
-      <!-- Add Recipe -->
-      <div class="container mt-5" id="add-recipe" align="center">
+      <!-- Add or edit Recipe -->
+      <div class="container mt-5" id="add-or-edit-recipe" align="center">
         <form>
           <!-- Recipe Name -->
           <div class="form-group col-md-12" align="left">
@@ -103,16 +103,16 @@
             <div class="form-row flex-nowrap">
               <div class="form-group col-md-7">
                 <label for="ingredients-input">Ingredient</label>
-                <input class="form-control" id="ingredients-input">
+                <input class="form-control ingredients-input">
               </div>
               <div class="form-group col-md-2">
                 <label for="amount-input">Amount</label>
-                <input type="number" id="amount-input" class="form-control">
+                <input type="number" class="form-control amount-input">
                 </input>
               </div>
               <div class="form-group col-md-2">
                 <label for="units-input">Unit</label>
-                <input list="unitList" id="units-input" class="form-control">
+                <input list="unitList" class="form-control units-input">
                 </input>
               </div>
             </div>
@@ -139,10 +139,10 @@
             <label for="instruction-input">Instructions</label>
             <div class="form-row align-items-end flex-nowrap">
               <div class="form-group col-md-1 align-self-center" align="center">
-                <span id="instruction-step">1.</span>
+                <span class="instruction-step">1.</span>
               </div>
               <div class="form-group col-md-9">
-                <textarea class="form-control" id="instruction-input" rows="2"></textarea>
+                <textarea class="form-control instruction-input" rows="2"></textarea>
               </div>
             </div>
             <div class="form-row align-items-end flex-nowrap">
@@ -158,9 +158,8 @@
             </div>
           </div>
 
-          <!-- Submit -->
-          <div align="right">
-            <button type="submit" class="btn btn-primary" id="submit-recipe-button">Add Recipe</button>
+          <!-- Submit, this can be add or edit -->
+          <div id="submit-recipe-button-div" align="right">
           </div>
 
         </form>

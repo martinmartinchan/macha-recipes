@@ -44,6 +44,25 @@ class CookbookHandler {
       .catch(err => reject(err));
     })
   }
+
+  editRecipe(oldRecipeName, editedRecipe){
+    let data = {};
+    data['password'] = this.dummyPassword;
+    data['name'] = oldRecipeName;
+    data['recipe'] = editedRecipe;
+    return new Promise ((resolve, reject) => {
+      fetch(this.baseURL + "/editrecipe", {
+        method: 'PUT',
+        headers: {
+          'Content-type': 'application/json'
+        },
+        body: JSON.stringify(data)
+      })
+      .then(res => res.json())
+      .then(data => resolve(data))
+      .catch(err => reject(err));
+    })
+  }
 }
 
 cH = new CookbookHandler();
