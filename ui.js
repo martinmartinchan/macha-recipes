@@ -1,7 +1,12 @@
 class UIHandler {
   constructor (data) {
     this.editingRecipe = false;
-    this.recipes = data.result.recipes;
+    if (data.success) {
+      this.recipes = data.result.recipes;
+    } else {
+      this.recipes = [];
+    }
+
     document.getElementById('recipes-nav').addEventListener('click', () => {
       if (this.editingRecipe) {
         if (confirm("Quit editing recipe?")) {
@@ -29,7 +34,40 @@ class UIHandler {
       }
     });
 
-    this.populateRecipesPage();
+    const searchBar = document.getElementById('search-bar');
+    searchBar.addEventListener('keydown', e => {
+      if (e.keyCode == 13) {
+        const matchedList = this.recipes.filter(recipe => {
+          return recipe.name.toLowerCase().includes(e.target.value.toLowerCase());
+        });
+        if (matchedList.length === 1) {
+          this.showRecipe(matchedList[0]);
+        }
+        e.preventDefault();
+      }
+    });
+    searchBar.addEventListener('keyup', e => {
+      if (e.keyCode == 13) {
+        return;
+      }
+      const matchedList = this.recipes.filter(recipe => {
+        return recipe.name.toLowerCase().includes(e.target.value.toLowerCase());
+      });
+      this.populateRecipesPage(matchedList);
+      e.preventDefault();
+    });
+    document.getElementById('search-icon').addEventListener('click', e => {
+      const searchValue = searchBar.value;
+      const matchedList = this.recipes.filter(recipe => {
+        return recipe.name.toLowerCase().includes(searchValue.toLowerCase());
+      });
+      if (matchedList.length === 1) {
+        this.showRecipe(matchedList[0]);
+      }
+      e.preventDefault();
+    });
+
+    this.populateRecipesPage(this.recipes);
     document.getElementById('addIngredientButton').addEventListener('click', e => {
       this.addIngredientRow();
       e.preventDefault();
@@ -58,7 +96,7 @@ class UIHandler {
     let subPath = location.pathname;
     subPath = subPath.slice(1).replace("%20", " ");
     let recipeFound = false;
-    if (typeof this.recipes != 'undefined') {
+    if (this.recipes.length != 0) {
       this.recipes.forEach(recipe => {
         if (recipe.name === subPath) {
           this.showRecipe(recipe);
@@ -77,15 +115,13 @@ class UIHandler {
   }
 
   goToRecipesPage() {
-    document.getElementById('search-recipes').style.display = 'block';
-    document.getElementById('recipes').style.display = 'block';
+    document.getElementById('front-page').style.display = 'block';
     document.getElementById('single-recipe').style.display = 'none';
     document.getElementById('add-or-edit-recipe').style.display = 'none';
   }
   
   goToAddRecipePage() {
-    document.getElementById('search-recipes').style.display = 'none';
-    document.getElementById('recipes').style.display = 'none';
+    document.getElementById('front-page').style.display = 'none';
     document.getElementById('single-recipe').style.display = 'none';
     document.getElementById('add-or-edit-recipe').style.display = 'block';
 
@@ -116,8 +152,7 @@ class UIHandler {
   }
 
   goToEditRecipePage(recipe) {
-    document.getElementById('search-recipes').style.display = 'none';
-    document.getElementById('recipes').style.display = 'none';
+    document.getElementById('front-page').style.display = 'none';
     document.getElementById('single-recipe').style.display = 'none';
     document.getElementById('add-or-edit-recipe').style.display = 'block';
     this.editingRecipe = true;
@@ -174,16 +209,19 @@ class UIHandler {
   refresh(callback) {
     cH.get()
       .then(data => {
-        this.recipes = data.result.recipes;
-        this.populateRecipesPage();
+        if (data.success) {
+          this.recipes = data.result.recipes;
+        } else {
+          this.recipes = [];
+        }
+        this.populateRecipesPage(this.recipes);
         callback;
       })
       .catch(err => console.log(err));
   }
 
   showRecipe(recipe) {
-    document.getElementById('search-recipes').style.display = 'none';
-    document.getElementById('recipes').style.display = 'none';
+    document.getElementById('front-page').style.display = 'none';
     document.getElementById('single-recipe').style.display = 'block';
     document.getElementById('add-or-edit-recipe').style.display = 'none';
 
@@ -288,12 +326,12 @@ class UIHandler {
     editRecipeDiv.append(deleteButton);
   }
 
-  populateRecipesPage() {
+  populateRecipesPage(recipeList) {
     const mainRecipeDiv = document.getElementById('recipes');
     while (mainRecipeDiv.children.length > 0) {
       mainRecipeDiv.removeChild(mainRecipeDiv.children[0]);
     }
-    if (typeof this.recipes === 'undefined') {
+    if (recipeList.length === 0) {
       let emptyCard;
       let header;
       emptyCard = document.createElement('div');
@@ -303,7 +341,7 @@ class UIHandler {
 
       header = document.createElement('h5');
       header.classList.add('card-header');
-      header.appendChild(document.createTextNode("Cookbook is empty"));
+      header.appendChild(document.createTextNode("No recipes"));
 
       emptyCard.appendChild(header);
       mainRecipeDiv.appendChild(emptyCard);
@@ -312,7 +350,7 @@ class UIHandler {
       let header;
       let cardBody;
       let descriptionText;
-      this.recipes.forEach(recipe => {
+      recipeList.forEach(recipe => {
         recipeCard = document.createElement('div');
         recipeCard.classList.add('card');
         recipeCard.classList.add('w-75');

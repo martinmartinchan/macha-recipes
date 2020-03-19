@@ -16,7 +16,7 @@
   </head>
   <body>
     <!-- Main container -->
-    <div class="container main-container">
+    <div class="container main-container mb-5">
       <!-- Navigation bar -->
       <nav class="navbar navbar-expand bg-dark">
         <ul class="navbar-nav ml-auto">
@@ -31,21 +31,25 @@
       <div class="alert alert-danger" id="status-failed" role="alert" align="center">
       </div>
 
-      <!-- Search bar -->
-      <form id="search-recipes">
-        <div class="p-3 w-50 rounded mx-auto">
-          <div class="input-group">
-            <input type="search" placeholder="Search for a recipe..." class="form-control">
-            <div class="input-group-append">
-              <button type="submit" class="btn btn-link"><i class="fa fa-search"></i></button>
+      <!-- Main page with search bar and recipe list -->
+      <div id="front-page" class="container mt-3" align="center" >
+        <!-- Search bar -->
+        <form id="search-recipes">
+          <div class="p-3 w-50 rounded mx-auto">
+            <div class="input-group">
+              <input type="search" autocomplete="off" id="search-bar" placeholder="Search for a recipe..." class="form-control">
+              <div class="input-group-append">
+                <button type="submit" id="search-icon" class="btn btn-link"><i class="fa fa-search"></i></button>
+              </div>
             </div>
           </div>
-        </div>
-      </form>
+        </form>
 
-      <!-- Recipe List -->
-      <div class="container mt-5" id="recipes" align="center">
+        <!-- Recipe List -->
+        <div id="recipes">
+        </div>
       </div>
+      
 
       <!-- Single Recipe Page -->
       <div class="container mt-5" id="single-recipe" align="left">
