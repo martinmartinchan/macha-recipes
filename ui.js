@@ -436,7 +436,6 @@ class UIHandler {
 
     amountInput.classList.add('form-control');
     amountInput.classList.add('amount-input');
-    amountInput.setAttribute('type', 'number');
 
     unitInput.classList.add('form-control');
     unitInput.classList.add('units-input');
