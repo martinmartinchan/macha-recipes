@@ -136,20 +136,24 @@ class UIHandler {
     submitButton.innerHTML = "Add Recipe";
     submitButton.addEventListener('click', e => {
       const recipe = this.parseRecipeToSubmit();
-      this.loading();
-      cH.addRecipe(recipe)
-        .then(data => {
-          this.showStatus(data.success, data.message);
-          if (data.success) {
-            this.clearAddRecipePage();
-            this.refresh()
-            .then(this.showRecipe(recipe))
-            .catch(err => console.log(err));
-          }
-        })
-        .catch(err => {
-          console.log(err);
-        });
+      if (this.checkParsedRecipe(recipe)) {
+        this.loading();
+        cH.addRecipe(recipe)
+          .then(data => {
+            this.showStatus(data.success, data.message);
+            if (data.success) {
+              this.clearAddRecipePage();
+              this.refresh()
+              .then(this.showRecipe(recipe))
+              .catch(err => console.log(err));
+            }
+          })
+          .catch(err => {
+            console.log(err);
+          });
+      } else {
+        this.showStatus(false, "Recipe must contain name, number of servings, at least one ingredient and at least one instruction.")
+      }
       e.preventDefault();
     });
     buttonDiv.appendChild(submitButton);
@@ -196,24 +200,52 @@ class UIHandler {
     submitButton.innerHTML = "Submit Changes";
     submitButton.addEventListener('click', e => {
       const editedRecipe = this.parseRecipeToSubmit();
-      this.loading();
-      cH.editRecipe(recipe.name, editedRecipe)
-        .then(data => {
-          this.showStatus(data.success, data.message);
-          if (data.success) {
-            this.editingRecipe = false;
-            this.clearAddRecipePage();
-            this.refresh()
-            .then(this.showRecipe(editedRecipe))
-            .catch(err => console.log(err));
-          }
-        })
-        .catch(err => {
-          console.log(err);
-        });
+      if (this.checkParsedRecipe(editedRecipe)) {
+        this.loading();
+        cH.editRecipe(recipe.name, editedRecipe)
+          .then(data => {
+            this.showStatus(data.success, data.message);
+            if (data.success) {
+              this.editingRecipe = false;
+              this.clearAddRecipePage();
+              this.refresh()
+              .then(this.showRecipe(editedRecipe))
+              .catch(err => console.log(err));
+            }
+          })
+          .catch(err => {
+            console.log(err);
+          });
+      } else {
+        this.showStatus(false, "Recipe must contain name, number of servings, at least one ingredient and at least one instruction.")
+      }
       e.preventDefault();
     });
     buttonDiv.appendChild(submitButton);
+  }
+
+  checkParsedRecipe(recipe) {
+    let success = true;
+    if (!recipe.name) {
+      success = false;
+    }
+    if (!recipe.servings) {
+      success = false;
+    }
+    recipe.ingredients.forEach(ing => {
+      if (!ing.name) {
+        success = false;
+      }
+      if (!ing.amount) {
+        success = false;
+      }
+    });
+    recipe.instructions.forEach(inst => {
+      if (!inst.instruction) {
+        success = false;
+      }
+    });
+    return success
   }
 
   refresh() {
