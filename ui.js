@@ -56,16 +56,6 @@ class UIHandler {
       this.populateRecipesPage(matchedList);
       e.preventDefault();
     });
-    document.getElementById('search-icon').addEventListener('click', e => {
-      const searchValue = searchBar.value;
-      const matchedList = this.recipes.filter(recipe => {
-        return recipe.name.toLowerCase().includes(searchValue.toLowerCase());
-      });
-      if (matchedList.length === 1) {
-        this.showRecipe(matchedList[0]);
-      }
-      e.preventDefault();
-    });
 
     this.populateRecipesPage(this.recipes);
     document.getElementById('addIngredientButton').addEventListener('click', e => {
@@ -92,6 +82,13 @@ class UIHandler {
     this.deroute();
   }
 
+  loading() {
+    document.getElementById('spin').style.display = 'block';
+    document.getElementById('front-page').style.display = 'none';
+    document.getElementById('single-recipe').style.display = 'none';
+    document.getElementById('add-or-edit-recipe').style.display = 'none';
+  }
+
   deroute() {
     let subPath = location.pathname;
     subPath = subPath.slice(1).replace("%20", " ");
@@ -115,12 +112,14 @@ class UIHandler {
   }
 
   goToRecipesPage() {
+    document.getElementById('spin').style.display = 'none';
     document.getElementById('front-page').style.display = 'block';
     document.getElementById('single-recipe').style.display = 'none';
     document.getElementById('add-or-edit-recipe').style.display = 'none';
   }
   
   goToAddRecipePage() {
+    document.getElementById('spin').style.display = 'none';
     document.getElementById('front-page').style.display = 'none';
     document.getElementById('single-recipe').style.display = 'none';
     document.getElementById('add-or-edit-recipe').style.display = 'block';
@@ -137,21 +136,27 @@ class UIHandler {
     submitButton.innerHTML = "Add Recipe";
     submitButton.addEventListener('click', e => {
       const recipe = this.parseRecipeToSubmit();
+      this.loading();
       cH.addRecipe(recipe)
         .then(data => {
           this.showStatus(data.success, data.message);
           if (data.success) {
             this.clearAddRecipePage();
-            this.refresh(this.showRecipe(recipe));
+            this.refresh()
+            .then(this.showRecipe(recipe))
+            .catch(err => console.log(err));
           }
         })
-        .catch(err => console.log(err));
+        .catch(err => {
+          console.log(err);
+        });
       e.preventDefault();
     });
     buttonDiv.appendChild(submitButton);
   }
 
   goToEditRecipePage(recipe) {
+    document.getElementById('spin').style.display = 'none';
     document.getElementById('front-page').style.display = 'none';
     document.getElementById('single-recipe').style.display = 'none';
     document.getElementById('add-or-edit-recipe').style.display = 'block';
@@ -191,23 +196,30 @@ class UIHandler {
     submitButton.innerHTML = "Submit Changes";
     submitButton.addEventListener('click', e => {
       const editedRecipe = this.parseRecipeToSubmit();
+      this.loading();
       cH.editRecipe(recipe.name, editedRecipe)
         .then(data => {
           this.showStatus(data.success, data.message);
           if (data.success) {
             this.editingRecipe = false;
             this.clearAddRecipePage();
-            this.refresh(this.showRecipe(editedRecipe));
+            this.refresh()
+            .then(this.showRecipe(editedRecipe))
+            .catch(err => console.log(err));
           }
         })
-        .catch(err => console.log(err));
+        .catch(err => {
+          console.log(err);
+        });
       e.preventDefault();
     });
     buttonDiv.appendChild(submitButton);
   }
 
-  refresh(callback) {
-    cH.get()
+  refresh() {
+    this.loading();
+    return new Promise ((resolve, reject) => {
+      cH.get()
       .then(data => {
         if (data.success) {
           this.recipes = data.result.recipes;
@@ -215,12 +227,14 @@ class UIHandler {
           this.recipes = [];
         }
         this.populateRecipesPage(this.recipes);
-        callback;
+        resolve();
       })
-      .catch(err => console.log(err));
+      .catch(err => reject(err))
+    })
   }
 
   showRecipe(recipe) {
+    document.getElementById('spin').style.display = 'none';
     document.getElementById('front-page').style.display = 'none';
     document.getElementById('single-recipe').style.display = 'block';
     document.getElementById('add-or-edit-recipe').style.display = 'none';
@@ -311,14 +325,19 @@ class UIHandler {
     deleteButton.innerHTML = "Delete Recipe";
     deleteButton.addEventListener('click', e => {
       let data = {name: recipe.name}
+      this.loading();
       cH.deleteRecipe(data)
         .then(data => {
           this.showStatus(data.success, data.message);
           if (data.success) {
-            this.refresh(this.goToRecipesPage());
+            this.refresh()
+            .then(this.goToRecipesPage())
+            .catch(err => console.log(err));
           }
         })
-        .catch(err => console.log(err));
+        .catch(err => {
+          console.log(err);
+        });
       e.preventDefault()
     });
 

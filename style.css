@@ -11,7 +11,7 @@
 }
 
 #front-page {
-  display: block;
+  display: none;
 }
 
 #single-recipe {
@@ -79,3 +79,27 @@ table {
   background-color: rgba(238, 238, 238, 0.35);
 }
 
+@keyframes spinner {
+  0% {
+  transform: translate3d(-50%, -50%, 0) rotate(0deg);
+  }
+  100% {
+  transform: translate3d(-50%, -50%, 0) rotate(360deg);
+  }
+  }
+  
+#spin::before {
+  animation: 1.5s linear infinite spinner;
+  animation-play-state: inherit;
+  border: solid 5px rgb(212, 212, 212);
+  border-bottom-color: rgba(61, 198, 36, 1);
+  border-radius: 50%;
+  content: "";
+  height: 40px;
+  width: 40px;
+  position: absolute;
+  top: 50%;
+  left: 50%;
+  transform: translate3d(-50%, -50%, 0);
+  will-change: transform;
+}
