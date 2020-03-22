@@ -108,6 +108,13 @@
               </div>
               <div class="form-group col-md-2">
                 <label for="units-input">Unit</label>
+                <datalist id=unitList>
+                  <option value="g"></option>
+                  <option value="dl"></option>
+                  <option value="kg"></option>
+                  <option value="st"></option>
+                  <option value="l"></option>
+                </datalist>
                 <input list="unitList" class="form-control units-input">
                 </input>
               </div>
@@ -167,8 +174,3 @@
     <script src="app.js"></script>
   </body>
 </html>
-
-<datalist id=unitList>
-  <option value="g"></option>
-  <option value="dl"></option>
-</datalist>
