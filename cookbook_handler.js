@@ -32,8 +32,8 @@ class CookbookHandler {
   deleteRecipe(data) {
     data['password'] = this.dummyPassword;
     return new Promise ((resolve, reject) => {
-      fetch(this.baseURL + "/removerecipe", {
-        method: 'PUT',
+      fetch(this.baseURL + "/deleterecipe", {
+        method: 'DELETE',
         headers: {
           'Content-type': 'application/json'
         },

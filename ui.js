@@ -2,7 +2,7 @@ class UIHandler {
   constructor (data) {
     this.editingRecipe = false;
     if (data.success) {
-      this.recipes = data.result.recipes;
+      this.recipes = data.result;
     } else {
       this.recipes = [];
     }
@@ -143,9 +143,9 @@ class UIHandler {
             this.showStatus(data.success, data.message);
             if (data.success) {
               this.clearAddRecipePage();
-              this.refresh()
-              .then(this.showRecipe(recipe))
-              .catch(err => console.log(err));
+              this.recipes = data.result;
+              this.populateRecipesPage(this.recipes);
+              this.showRecipe(recipe)
             }
           })
           .catch(err => {
@@ -208,9 +208,9 @@ class UIHandler {
             if (data.success) {
               this.editingRecipe = false;
               this.clearAddRecipePage();
-              this.refresh()
-              .then(this.showRecipe(editedRecipe))
-              .catch(err => console.log(err));
+              this.recipes = data.result;
+              this.populateRecipesPage(this.recipes);
+              this.showRecipe(editedRecipe);
             }
           })
           .catch(err => {
@@ -246,23 +246,6 @@ class UIHandler {
       }
     });
     return success
-  }
-
-  refresh() {
-    this.loading();
-    return new Promise ((resolve, reject) => {
-      cH.get()
-      .then(data => {
-        if (data.success) {
-          this.recipes = data.result.recipes;
-        } else {
-          this.recipes = [];
-        }
-        this.populateRecipesPage(this.recipes);
-        resolve();
-      })
-      .catch(err => reject(err))
-    })
   }
 
   showRecipe(recipe) {
@@ -362,9 +345,9 @@ class UIHandler {
         .then(data => {
           this.showStatus(data.success, data.message);
           if (data.success) {
-            this.refresh()
-            .then(this.goToRecipesPage())
-            .catch(err => console.log(err));
+            this.recipes = data.result;
+            this.populateRecipesPage(this.recipes);
+            this.goToRecipesPage()
           }
         })
         .catch(err => {
