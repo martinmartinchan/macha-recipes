@@ -1,39 +1,49 @@
-class UIHandler {
-  constructor (data) {
+class UI {
+	/* The constructor of this class basically works as a initiator for the whole page
+    It adds event listeners to the navigation bars, routes us to the correct page and shows the recipes
+  */
+ 	constructor (cb, recipes) {
+		this.cb = cb;
+    this.recipes = recipes;
     this.editingRecipe = false;
-    if (data.success) {
-      this.recipes = data.result;
-    } else {
-      this.recipes = [];
-    }
 
+    this.fillAddRecipePage();
+    this.resetFrontPage();
+
+    /* Add event handlers to the nav-bar items */
     document.getElementById('recipes-nav').addEventListener('click', () => {
       if (this.editingRecipe) {
         if (confirm("Quit editing recipe?")) {
           this.editingRecipe = false;
-          this.clearAddRecipePage();
+          this.clearAddOrEditRecipePage();
+          this.fillAddRecipePage();
           history.pushState(null, "Macha Recipes", "/");
-          this.goToRecipesPage();
+          this.resetFrontPage();
+          this.goToFrontPage();
         }
       } else {
         history.pushState(null, "Macha Recipes", "/");
-        this.goToRecipesPage();
+        this.resetFrontPage();
+        this.goToFrontPage();
       }
     });
     document.getElementById('add-recipe-nav').addEventListener('click', () => {
       if (this.editingRecipe) {
         if (confirm("Quit editing recipe?")) {
           this.editingRecipe = false;
-          this.clearAddRecipePage();
+          this.clearAddOrEditRecipePage();
+          this.fillAddRecipePage();
           history.pushState(null, "Add recipe", "/addrecipe");
-          this.goToAddRecipePage();
+          this.fillAddRecipePage();
+          this.goToAddOrEditRecipePage();
         }
       } else {
         history.pushState(null, "Add recipe", "/addrecipe");
-        this.goToAddRecipePage();
+        this.goToAddOrEditRecipePage();
       }
     });
 
+    /* Add functionality to the search bar */
     const searchBar = document.getElementById('search-bar');
     searchBar.addEventListener('keydown', e => {
       if (e.keyCode == 13) {
@@ -41,7 +51,10 @@ class UIHandler {
           return recipe.name.toLowerCase().includes(e.target.value.toLowerCase());
         });
         if (matchedList.length === 1) {
-          this.showRecipe(matchedList[0]);
+          const recipeToShow = matchedList[0];
+          this.fillSingleRecipePage(recipeToShow);
+          history.pushState(null, recipeToShow.name, "/" + recipeToShow.name);
+          this.goToSingleRecipePage();
         }
         e.preventDefault();
       }
@@ -53,11 +66,11 @@ class UIHandler {
       const matchedList = this.recipes.filter(recipe => {
         return recipe.name.toLowerCase().includes(e.target.value.toLowerCase());
       });
-      this.populateRecipesPage(matchedList);
+      this.populateRecipes(matchedList);
       e.preventDefault();
     });
 
-    this.populateRecipesPage(this.recipes);
+    /* Add functionality to the add ingredients/instructions row buttons in add/edit recipe */
     document.getElementById('addIngredientButton').addEventListener('click', e => {
       this.addIngredientRow();
       e.preventDefault();
@@ -67,36 +80,35 @@ class UIHandler {
       e.preventDefault();
     });
 
+    /* Add eventlistener to popstate */
     window.addEventListener('popstate', e => {
       if (this.editingRecipe) {
         if (confirm("Quit editing recipe?")) {
           this.editingRecipe = false;
-          this.clearAddRecipePage();
+          this.clearAddOrEditRecipePage();
+          this.fillAddRecipePage();
           this.deroute();
         }
       } else {
-        this.deroute();
+        this.route();
       }
       e.preventDefault();
     });
-    this.deroute();
-  }
 
-  loading() {
-    document.getElementById('spin').style.display = 'block';
-    document.getElementById('front-page').style.display = 'none';
-    document.getElementById('single-recipe').style.display = 'none';
-    document.getElementById('add-or-edit-recipe').style.display = 'none';
-  }
+    /* Routes to the correct page */
+    this.route();
+	}
 
-  deroute() {
+	/* Function route to the correct page */
+  route() {
     let subPath = location.pathname;
     subPath = subPath.slice(1).replace("%20", " ");
     let recipeFound = false;
     if (this.recipes.length != 0) {
       this.recipes.forEach(recipe => {
         if (recipe.name === subPath) {
-          this.showRecipe(recipe);
+          this.fillSingleRecipePage(recipe);
+          this.goToSingleRecipePage();
           recipeFound = true;
           return;
         }
@@ -104,31 +116,131 @@ class UIHandler {
     }
     if (!recipeFound) {
       if (subPath === "addrecipe") {
-        this.goToAddRecipePage();
+        this.goToAddOrEditRecipePage();
       } else {
-        this.goToRecipesPage();
+        this.goToFrontPage();
       }
     }
   }
 
-  goToRecipesPage() {
+	/* Shows a status with information on how the communication with the cookbook went */
+	showStatus(success, message){
+    let status;
+    if (success) {
+      status = document.getElementById('status-success');
+    } else {
+      status = document.getElementById('status-failed');
+    }
+    status.innerHTML = message;
+    status.style.display = 'block';
+    setTimeout(() => {
+      status.style.display = 'none';
+    }, 5000);
+  }
+
+ 	/* Shows the loading spinner */
+ 	loading() {
+		document.getElementById('spin').style.display = 'block';
+		document.getElementById('front-page').style.display = 'none';
+		document.getElementById('add-or-edit-recipe').style.display = 'none';
+		document.getElementById('single-recipe').style.display = 'none';
+	}
+
+	/* Go to the front page with the search bar and the recipes in a list */
+	goToFrontPage() {
     document.getElementById('spin').style.display = 'none';
     document.getElementById('front-page').style.display = 'block';
-    document.getElementById('single-recipe').style.display = 'none';
     document.getElementById('add-or-edit-recipe').style.display = 'none';
-  }
-  
-  goToAddRecipePage() {
+    document.getElementById('single-recipe').style.display = 'none';
+	}
+	
+	/* Go to the add or edit recipe page which is a form page with a submit button */
+	goToAddOrEditRecipePage() {
     document.getElementById('spin').style.display = 'none';
     document.getElementById('front-page').style.display = 'none';
-    document.getElementById('single-recipe').style.display = 'none';
     document.getElementById('add-or-edit-recipe').style.display = 'block';
+    document.getElementById('single-recipe').style.display = 'none';
+	}
+	
+	/* Go to the a single recipe page showing only a single recipe */
+	goToSingleRecipePage() {
+    document.getElementById('spin').style.display = 'none';
+    document.getElementById('front-page').style.display = 'none';
+    document.getElementById('add-or-edit-recipe').style.display = 'none';
+    document.getElementById('single-recipe').style.display = 'block';
+	}
+	
+	/* Clears the serchbar and fills the page with current recipe list */
+	resetFrontPage() {
+    document.getElementById('search-bar').value = '';
+    this.populateRecipes(this.recipes);
+	}
 
-    const buttonDiv = document.getElementById('submit-recipe-button-div');
-    while (buttonDiv.lastChild) {
-      buttonDiv.removeChild(buttonDiv.lastChild);
+	/* Clears the recipes and refills with the recipe list provided */
+	populateRecipes(recipeList) {
+		const mainRecipeDiv = document.getElementById('recipes');
+    while (mainRecipeDiv.children.length > 0) {
+      mainRecipeDiv.removeChild(mainRecipeDiv.children[0]);
     }
+    if (recipeList.length === 0) {
+      let emptyCard;
+      let header;
+      emptyCard = document.createElement('div');
+      emptyCard.classList.add('card');
+      emptyCard.classList.add('w-75');
+      emptyCard.classList.add('mt-3');
+      emptyCard.classList.add('mx-auto');
 
+      header = document.createElement('h5');
+      header.classList.add('card-header');
+      header.appendChild(document.createTextNode("No recipes"));
+
+      emptyCard.appendChild(header);
+      mainRecipeDiv.appendChild(emptyCard);
+    } else {
+      let recipeCard;
+      let header;
+      let cardBody;
+      let descriptionText;
+      recipeList.forEach(recipe => {
+        recipeCard = document.createElement('div');
+        recipeCard.classList.add('card');
+        recipeCard.classList.add('w-75');
+        recipeCard.classList.add('mt-3');
+        recipeCard.classList.add('mx-auto');
+  
+        header = document.createElement('h5');
+        header.classList.add('card-header');
+        header.appendChild(document.createTextNode(recipe.name));
+        header.style.textAlign = 'left';
+  
+        cardBody = document.createElement('div');
+        cardBody.classList.add('card-body');
+        cardBody.style.textAlign = 'left';
+  
+        descriptionText = document.createElement('p');
+        descriptionText.classList.add('card-text');
+        descriptionText.appendChild(document.createTextNode(recipe.description));
+  
+        cardBody.appendChild(descriptionText);
+  
+        recipeCard.appendChild(header);
+        recipeCard.appendChild(cardBody);
+  
+        recipeCard.style.cursor = 'pointer';
+        recipeCard.addEventListener('click', e => {
+          history.pushState(null, recipe.name, "/" + recipe.name);
+					this.fillSingleRecipePage(recipe);
+					this.goToSingleRecipePage();
+          e.preventDefault();
+        });
+        mainRecipeDiv.appendChild(recipeCard);
+      });
+    }
+	}
+
+	/* Prepares the add recipe page for a recipe to be added. Creates appropriate button */
+	fillAddRecipePage() {  
     const submitButton = document.createElement('button');
     submitButton.classList.add('btn');
     submitButton.classList.add('btn-primary');
@@ -138,15 +250,20 @@ class UIHandler {
       const recipe = this.parseRecipeToSubmit();
       if (this.checkParsedRecipe(recipe)) {
         this.loading();
-        cH.addRecipe(recipe)
+        this.cb.addRecipe(recipe)
           .then(data => {
-            this.showStatus(data.success, data.message);
             if (data.success) {
-              this.clearAddRecipePage();
+              this.clearAddOrEditRecipePage();
+              this.fillAddRecipePage();
               this.recipes = data.result;
-              this.populateRecipesPage(this.recipes);
-              this.showRecipe(recipe)
+              this.populateRecipes(this.recipes);
+              this.fillSingleRecipePage(recipe);
+              history.pushState(null, recipe.name, "/" + recipe.name);
+              this.goToSingleRecipePage();
+            } else {
+              this.goToAddOrEditRecipePage();
             }
+            this.showStatus(data.success, data.message);
           })
           .catch(err => {
             console.log(err);
@@ -156,16 +273,12 @@ class UIHandler {
       }
       e.preventDefault();
     });
-    buttonDiv.appendChild(submitButton);
+    document.getElementById('submit-recipe-button-div').appendChild(submitButton);
   }
 
-  goToEditRecipePage(recipe) {
-    document.getElementById('spin').style.display = 'none';
-    document.getElementById('front-page').style.display = 'none';
-    document.getElementById('single-recipe').style.display = 'none';
-    document.getElementById('add-or-edit-recipe').style.display = 'block';
+	/* Prepares the edit recipe page for a recipe to be edited. Creates appropriate button */
+	fillEditRecipePage(recipe) {
     this.editingRecipe = true;
-
     document.getElementById('recipe-name-input').value = recipe.name;
     document.getElementById('recipe-description-input').value = recipe.description;
     document.getElementById('servings-input').value = recipe.servings;
@@ -189,10 +302,6 @@ class UIHandler {
       instructionList.getElementsByClassName('instruction-input')[step - 1].value = recipe.instructions[i].instruction;
     }
 
-    const buttonDiv = document.getElementById('submit-recipe-button-div');
-    while (buttonDiv.lastChild) {
-      buttonDiv.removeChild(buttonDiv.lastChild);
-    }
     const submitButton = document.createElement('button');
     submitButton.classList.add('btn');
     submitButton.classList.add('btn-primary');
@@ -202,16 +311,21 @@ class UIHandler {
       const editedRecipe = this.parseRecipeToSubmit();
       if (this.checkParsedRecipe(editedRecipe)) {
         this.loading();
-        cH.editRecipe(recipe.name, editedRecipe)
+        this.cb.editRecipe(recipe.name, editedRecipe)
           .then(data => {
-            this.showStatus(data.success, data.message);
             if (data.success) {
               this.editingRecipe = false;
-              this.clearAddRecipePage();
+              this.clearAddOrEditRecipePage();
+              this.fillAddRecipePage();
               this.recipes = data.result;
-              this.populateRecipesPage(this.recipes);
-              this.showRecipe(editedRecipe);
+              this.populateRecipes(this.recipes);
+              this.fillSingleRecipePage(editedRecipe);
+              history.pushState(null, editedRecipe.name, "/" + editedRecipe.name);
+              this.goToSingleRecipePage();
+            } else {
+              this.goToAddOrEditRecipePage();
             }
+            this.showStatus(data.success, data.message);
           })
           .catch(err => {
             console.log(err);
@@ -221,39 +335,37 @@ class UIHandler {
       }
       e.preventDefault();
     });
-    buttonDiv.appendChild(submitButton);
+    document.getElementById('submit-recipe-button-div').appendChild(submitButton);
   }
 
-  checkParsedRecipe(recipe) {
-    let success = true;
-    if (!recipe.name) {
-      success = false;
+	/* Clears the form in add or edit page and removes the old button */
+	clearAddOrEditRecipePage(){
+    document.getElementById('recipe-name-input').value = "";
+    document.getElementById('recipe-description-input').value = "";
+    document.getElementById('servings-input').value = "";
+    let ingredientList = document.getElementById('ingredient-list');
+    while (ingredientList.children.length > 2) {
+      ingredientList.removeChild(ingredientList.children[1]);
     }
-    if (!recipe.servings) {
-      success = false;
+    document.querySelector('.ingredients-input').value = "";
+    document.querySelector('.amount-input').value = "";
+    document.querySelector('.units-input').value = "";
+
+    let instructionList = document.getElementById('instruction-list');
+    while (instructionList.children.length > 3) {
+      instructionList.removeChild(instructionList.children[2]);
     }
-    recipe.ingredients.forEach(ing => {
-      if (!ing.name) {
-        success = false;
-      }
-      if (!ing.amount) {
-        success = false;
-      }
-    });
-    recipe.instructions.forEach(inst => {
-      if (!inst.instruction) {
-        success = false;
-      }
-    });
-    return success
+    document.querySelector('.instruction-input').value = "";
+		this.updateInstructionSteps();
+		
+		const buttonDiv = document.getElementById('submit-recipe-button-div');
+    while (buttonDiv.lastChild) {
+      buttonDiv.removeChild(buttonDiv.lastChild);
+    }
   }
 
-  showRecipe(recipe) {
-    document.getElementById('spin').style.display = 'none';
-    document.getElementById('front-page').style.display = 'none';
-    document.getElementById('single-recipe').style.display = 'block';
-    document.getElementById('add-or-edit-recipe').style.display = 'none';
-
+	/* Fills the single recipe page with a new recipe */
+	fillSingleRecipePage(recipe) {  
     document.getElementById('recipe-name-show').innerHTML = recipe.name;
     document.getElementById('servings-show').innerHTML = "Servings: " + recipe.servings;
     document.getElementById('description-show').innerHTML = recipe.description;
@@ -330,7 +442,10 @@ class UIHandler {
     editButton.classList.add('mr-3');
     editButton.innerHTML = "Edit Recipe";
     editButton.addEventListener('click', e => {
-      this.goToEditRecipePage(recipe);
+      this.clearAddOrEditRecipePage();
+      this.fillEditRecipePage(recipe);
+      //TODO route edit page
+      this.goToAddOrEditRecipePage();
       e.preventDefault()
     });
 
@@ -341,14 +456,17 @@ class UIHandler {
     deleteButton.addEventListener('click', e => {
       let data = {name: recipe.name}
       this.loading();
-      cH.deleteRecipe(data)
+      this.cb.deleteRecipe(data)
         .then(data => {
-          this.showStatus(data.success, data.message);
           if (data.success) {
             this.recipes = data.result;
-            this.populateRecipesPage(this.recipes);
-            this.goToRecipesPage()
+            this.resetFrontPage();
+            history.pushState(null, "Macha Recipes", "/");
+            this.goToFrontPage()
+          } else {
+            this.goToAddOrEditRecipePage();
           }
+          this.showStatus(data.success, data.message);
         })
         .catch(err => {
           console.log(err);
@@ -360,66 +478,8 @@ class UIHandler {
     editRecipeDiv.append(deleteButton);
   }
 
-  populateRecipesPage(recipeList) {
-    const mainRecipeDiv = document.getElementById('recipes');
-    while (mainRecipeDiv.children.length > 0) {
-      mainRecipeDiv.removeChild(mainRecipeDiv.children[0]);
-    }
-    if (recipeList.length === 0) {
-      let emptyCard;
-      let header;
-      emptyCard = document.createElement('div');
-      emptyCard.classList.add('card');
-      emptyCard.classList.add('w-75');
-      emptyCard.classList.add('mt-3');
-
-      header = document.createElement('h5');
-      header.classList.add('card-header');
-      header.appendChild(document.createTextNode("No recipes"));
-
-      emptyCard.appendChild(header);
-      mainRecipeDiv.appendChild(emptyCard);
-    } else {
-      let recipeCard;
-      let header;
-      let cardBody;
-      let descriptionText;
-      recipeList.forEach(recipe => {
-        recipeCard = document.createElement('div');
-        recipeCard.classList.add('card');
-        recipeCard.classList.add('w-75');
-        recipeCard.classList.add('mt-3');
-  
-        header = document.createElement('h5');
-        header.classList.add('card-header');
-        header.appendChild(document.createTextNode(recipe.name));
-        header.style.textAlign = 'left';
-  
-        cardBody = document.createElement('div');
-        cardBody.classList.add('card-body');
-        cardBody.style.textAlign = 'left';
-  
-        descriptionText = document.createElement('p');
-        descriptionText.classList.add('card-text');
-        descriptionText.appendChild(document.createTextNode(recipe.description));
-  
-        cardBody.appendChild(descriptionText);
-  
-        recipeCard.appendChild(header);
-        recipeCard.appendChild(cardBody);
-  
-        recipeCard.style.cursor = 'pointer';
-        recipeCard.addEventListener('click', e => {
-          history.pushState(null, recipe.name, "/" + recipe.name);
-          this.showRecipe(recipe)
-          e.preventDefault();
-        });
-        mainRecipeDiv.appendChild(recipeCard);
-      });
-    }
-  }
-
-  addIngredientRow() {
+	/* --------------------------Help functions--------------------------- */
+	addIngredientRow() {
     const rowDiv = document.createElement('div');
     rowDiv.classList.add('form-row');
     rowDiv.classList.add('flex-nowrap');
@@ -540,16 +600,40 @@ class UIHandler {
     document.getElementById('instruction-list').removeChild(rowDiv);
     this.updateInstructionSteps();
     e.preventDefault();
-  }
+	}
 
-  updateInstructionSteps() {
+	updateInstructionSteps() {
     const instructionList = document.getElementById('instruction-list')
     for (let i = 1; i < instructionList.childElementCount; i++) {
       instructionList.children[i].children[0].children[0].innerHTML = i + '.'
     }
+	}
+
+	checkParsedRecipe(recipe) {
+    let success = true;
+    if (!recipe.name) {
+      success = false;
+    }
+    if (!recipe.servings) {
+      success = false;
+    }
+    recipe.ingredients.forEach(ing => {
+      if (!ing.name) {
+        success = false;
+      }
+      if (!ing.amount) {
+        success = false;
+      }
+    });
+    recipe.instructions.forEach(inst => {
+      if (!inst.instruction) {
+        success = false;
+      }
+    });
+    return success
   }
 
-  parseRecipeToSubmit() {
+	parseRecipeToSubmit() {
     let recipe = {};
     const recipeName = document.getElementById('recipe-name-input').value;
     const description = document.getElementById('recipe-description-input').value;
@@ -589,39 +673,6 @@ class UIHandler {
     recipe['instructions'] = instObjects;
 
     return recipe;
-  }
+	}
 
-  showStatus(success, message){
-    let status;
-    if (success) {
-      status = document.getElementById('status-success');
-    } else {
-      status = document.getElementById('status-failed');
-    }
-    status.innerHTML = message;
-    status.style.display = 'block';
-    setTimeout(() => {
-      status.style.display = 'none';
-    }, 5000);
-  }
-
-  clearAddRecipePage(){
-    document.getElementById('recipe-name-input').value = "";
-    document.getElementById('recipe-description-input').value = "";
-    document.getElementById('servings-input').value = "";
-    let ingredientList = document.getElementById('ingredient-list');
-    while (ingredientList.children.length > 2) {
-      ingredientList.removeChild(ingredientList.children[1]);
-    }
-    document.querySelector('.ingredients-input').value = "";
-    document.querySelector('.amount-input').value = "";
-    document.querySelector('.units-input').value = "";
-
-    let instructionList = document.getElementById('instruction-list');
-    while (instructionList.children.length > 3) {
-      instructionList.removeChild(instructionList.children[2]);
-    }
-    document.querySelector('.instruction-input').value = "";
-    this.updateInstructionSteps();
-  }
 }

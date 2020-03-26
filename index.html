@@ -23,16 +23,16 @@
       </nav>
 
       <!-- Status -->
-      <div class="alert alert-success" id="status-success" role="alert" align="center">
+      <div class="alert alert-success text-center" id="status-success" role="alert">
       </div>
-      <div class="alert alert-danger" id="status-failed" role="alert" align="center">
+      <div class="alert alert-danger text-center" id="status-failed" role="alert">
       </div>
 
       <!-- Loading screen -->
       <div id="spin"></div>
 
       <!-- Main page with search bar and recipe list -->
-      <div id="front-page" class="container mt-3" align="center" >
+      <div id="front-page" class="container mt-3">
         <!-- Search bar -->
         <form id="search-recipes">
           <div class="p-3 w-50 rounded mx-auto">
@@ -46,10 +46,9 @@
         <div id="recipes">
         </div>
       </div>
-      
 
       <!-- Single Recipe Page -->
-      <div class="container mt-5" id="single-recipe" align="left">
+      <div class="container mt-5 text-left" id="single-recipe">
         <h1 id="recipe-name-show"></h1>
         <h5 id="servings-show"></h5>
         <p id="description-show"></p>
@@ -67,35 +66,37 @@
             </div>
           </div>
         </div>
-        <div class="form-group mt-5" id="edit-recipe-button" align="right">
+        <div class="d-flex flex-column align-items-end">
+          <div class="form-group mt-5" id="edit-recipe-button">
+          </div>
         </div>
       </div>
 
       <!-- Add or edit Recipe -->
-      <div class="container mt-5" id="add-or-edit-recipe" align="center">
+      <div class="container mt-5 mx-auto" id="add-or-edit-recipe">
         <form>
           <!-- Recipe Name -->
-          <div class="form-group col-md-12" align="left">
+          <div class="form-group col-md-12">
             <label for="recipe-name-input">Recipe Name</label>
             <input class="form-control" id="recipe-name-input" placeholder="Enter recipe name">
           </div>
 
           <!-- Servings -->
-          <div align="left">
-            <div class="form-group col-md-3" align="left">
+          <div>
+            <div class="form-group col-md-3">
               <label for="servings-input">Servings</label>
               <input type="number" class="form-control" id="servings-input" placeholder="Enter number of servings"></input>
             </div>
-        </div>
+          </div>
 
           <!-- Description -->
-          <div class="form-group col-md-12" align="left">
+          <div class="form-group col-md-12">
             <label for="recipe-description-input">Description</label>
             <textarea class="form-control" id="recipe-description-input" rows="3" placeholder="Enter description"></textarea>
           </div>
 
           <!-- Ingredients -->
-          <div class="w-75" align="left" id=ingredient-list>
+          <div class="w-75 mx-auto" id=ingredient-list>
             <div class="form-row flex-nowrap">
               <div class="form-group col-md-7">
                 <label for="ingredients-input">Ingredient</label>
@@ -138,10 +139,10 @@
           </div>
 
           <!-- Instructions -->
-          <div class="w-75" align="left" id=instruction-list>
+          <div class="w-75 mx-auto" id=instruction-list>
             <label for="instruction-input">Instructions</label>
             <div class="form-row align-items-end flex-nowrap">
-              <div class="form-group col-md-1 align-self-center" align="center">
+              <div class="form-group col-md-1 align-self-center">
                 <span class="instruction-step">1.</span>
               </div>
               <div class="form-group col-md-9">
@@ -149,7 +150,7 @@
               </div>
             </div>
             <div class="form-row align-items-end flex-nowrap">
-              <div class="form-group col-md-1 align-self-center" align="center">
+              <div class="form-group col-md-1 align-self-center">
                 <span id="read-only-instruction-number">2.</span>
               </div>
               <div class="form-group col-md-9">
@@ -162,14 +163,17 @@
           </div>
 
           <!-- Submit, this can be add or edit -->
-          <div id="submit-recipe-button-div" align="right">
+          <div class="d-flex flex-column align-items-end">
+            <div id="submit-recipe-button-div">
+            </div>
           </div>
+          
 
         </form>
       </div>
     </div>
     <script src="404redirect.js"></script>
-    <script src="cookbook_handler.js"></script>
+    <script src="cookbook.js"></script>
     <script src="ui.js"></script>
     <script src="app.js"></script>
   </body>

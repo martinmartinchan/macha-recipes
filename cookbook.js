@@ -1,4 +1,4 @@
-class CookbookHandler {
+class Cookbook {
   constructor() {
     this.baseURL = "https://martinchan.pythonanywhere.com";
     this.dummyPassword = "Troglodon5986";
@@ -64,5 +64,3 @@ class CookbookHandler {
     })
   }
 }
-
-cH = new CookbookHandler();
