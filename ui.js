@@ -53,7 +53,7 @@ class UI {
         if (matchedList.length === 1) {
           const recipeToShow = matchedList[0];
           this.fillSingleRecipePage(recipeToShow);
-          history.pushState(null, recipeToShow.name, "/" + recipeToShow.name);
+          history.pushState(null, recipeToShow.name, "/" + encodeURI(recipeToShow.name));
           this.goToSingleRecipePage();
         }
         e.preventDefault();
@@ -102,7 +102,7 @@ class UI {
 	/* Function route to the correct page */
   route() {
     let subPath = location.pathname;
-    subPath = subPath.slice(1).replace("%20", " ");
+    subPath = decodeURI(subPath.slice(1));
     let recipeFound = false;
     if (this.recipes.length != 0) {
       this.recipes.forEach(recipe => {
@@ -229,7 +229,7 @@ class UI {
   
         recipeCard.style.cursor = 'pointer';
         recipeCard.addEventListener('click', e => {
-          history.pushState(null, recipe.name, "/" + recipe.name);
+          history.pushState(null, recipe.name, "/" + encodeURI(recipe.name));
 					this.fillSingleRecipePage(recipe);
 					this.goToSingleRecipePage();
           e.preventDefault();
@@ -258,7 +258,7 @@ class UI {
               this.recipes = data.result;
               this.populateRecipes(this.recipes);
               this.fillSingleRecipePage(recipe);
-              history.pushState(null, recipe.name, "/" + recipe.name);
+              history.pushState(null, recipe.name, "/" + encodeURI(recipe.name));
               this.goToSingleRecipePage();
             } else {
               this.goToAddOrEditRecipePage();
@@ -320,7 +320,7 @@ class UI {
               this.recipes = data.result;
               this.populateRecipes(this.recipes);
               this.fillSingleRecipePage(editedRecipe);
-              history.pushState(null, editedRecipe.name, "/" + editedRecipe.name);
+              history.pushState(null, editedRecipe.name, "/" + encodeURI(editedRecipe.name));
               this.goToSingleRecipePage();
             } else {
               this.goToAddOrEditRecipePage();
