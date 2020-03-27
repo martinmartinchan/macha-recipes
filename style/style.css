@@ -26,6 +26,10 @@
   cursor: pointer;
 }
 
+#logo {
+  width: 185px;
+}
+
 .btn-primary {
   background-color: rgba(60, 198, 36, 1);
   border-color: rgba(60, 198, 36, 1);

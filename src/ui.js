@@ -11,6 +11,21 @@ class UI {
     this.resetFrontPage();
 
     /* Add event handlers to the nav-bar items */
+    document.getElementById('logo-nav').addEventListener('click', () => {
+      if (this.editingRecipe) {
+        if (confirm("Quit editing recipe?")) {
+          this.editingRecipe = false;
+          this.fillAddRecipePage();
+          history.pushState(null, "Macha Recipes", "/");
+          this.resetFrontPage();
+          this.goToFrontPage();
+        }
+      } else {
+        history.pushState(null, "Macha Recipes", "/");
+        this.resetFrontPage();
+        this.goToFrontPage();
+      }
+    });
     document.getElementById('recipes-nav').addEventListener('click', () => {
       if (this.editingRecipe) {
         if (confirm("Quit editing recipe?")) {
