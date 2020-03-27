@@ -152,10 +152,6 @@ class UI {
     }
   }
 
-  pageNotFound() {
-    //TODO
-  }
-
 	/* Shows a status with information on how the communication with the cookbook went */
 	showStatus(success, message){
     let status;
@@ -173,15 +169,26 @@ class UI {
 
  	/* Shows the loading spinner */
  	loading() {
-		document.getElementById('spin').style.display = 'block';
+    document.getElementById('spin').style.display = 'block';
+    document.getElementById('page404').style.display = 'none';
 		document.getElementById('front-page').style.display = 'none';
 		document.getElementById('add-or-edit-recipe').style.display = 'none';
 		document.getElementById('single-recipe').style.display = 'none';
 	}
 
+  /* Shows 404 page not found */
+  pageNotFound() {
+    document.getElementById('spin').style.display = 'none';
+    document.getElementById('page404').style.display = 'block';
+		document.getElementById('front-page').style.display = 'none';
+		document.getElementById('add-or-edit-recipe').style.display = 'none';
+		document.getElementById('single-recipe').style.display = 'none';
+  }
+
 	/* Go to the front page with the search bar and the recipes in a list */
 	goToFrontPage() {
     document.getElementById('spin').style.display = 'none';
+    document.getElementById('page404').style.display = 'none';
     document.getElementById('front-page').style.display = 'block';
     document.getElementById('add-or-edit-recipe').style.display = 'none';
     document.getElementById('single-recipe').style.display = 'none';
@@ -190,6 +197,7 @@ class UI {
 	/* Go to the add or edit recipe page which is a form page with a submit button */
 	goToAddOrEditRecipePage() {
     document.getElementById('spin').style.display = 'none';
+    document.getElementById('page404').style.display = 'none';
     document.getElementById('front-page').style.display = 'none';
     document.getElementById('add-or-edit-recipe').style.display = 'block';
     document.getElementById('single-recipe').style.display = 'none';
@@ -198,6 +206,7 @@ class UI {
 	/* Go to the a single recipe page showing only a single recipe */
 	goToSingleRecipePage() {
     document.getElementById('spin').style.display = 'none';
+    document.getElementById('page404').style.display = 'none';
     document.getElementById('front-page').style.display = 'none';
     document.getElementById('add-or-edit-recipe').style.display = 'none';
     document.getElementById('single-recipe').style.display = 'block';

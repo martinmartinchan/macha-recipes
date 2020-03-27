@@ -20,8 +20,8 @@
           <img id="logo" src="images/logo.png">
         </li>
         <ul class="navbar-nav ml-auto">
-          <li class="nav-item p-2" id="recipes-nav">Recipes</li>
-          <li class="nav-item p-2" id="add-recipe-nav">Add recipe</li>
+          <li class="nav-item p-2 ml-2" id="recipes-nav">Recipes</li>
+          <li class="nav-item p-2 ml-2" id="add-recipe-nav">Add recipe</li>
         </ul>
       </nav>
 
@@ -33,6 +33,11 @@
 
       <!-- Loading screen -->
       <div id="spin"></div>
+
+      <!-- 404 for pages that does not exist -->
+      <div class="text-center mt-3" id="page404">
+        <img class="img-fluid mx-auto" id="img-404" src="images/404.png" alt="">
+      </div>
 
       <!-- Main page with search bar and recipe list -->
       <div id="front-page" class="container mt-3">
@@ -47,31 +52,6 @@
 
         <!-- Recipe List -->
         <div id="recipes">
-        </div>
-      </div>
-
-      <!-- Single Recipe Page -->
-      <div class="container mt-5 text-left" id="single-recipe">
-        <h1 id="recipe-name-show"></h1>
-        <h5 id="servings-show"></h5>
-        <p id="description-show"></p>
-        <div class="d-flex align-items-stretch flex-wrap flex-sm-nowrap mt-3">
-          <div class="max-width-large-screen flex-sm-grow-0">
-            <h5>Ingredients</h5>
-            <table class="table">
-              <tbody id="ingredients-list-show">
-              </tbody>
-            </table>
-          </div>
-          <div>
-            <h5>Instructions</h5>
-            <div id="instructions-list-show">
-            </div>
-          </div>
-        </div>
-        <div class="d-flex flex-column align-items-end">
-          <div class="form-group mt-5" id="edit-recipe-button">
-          </div>
         </div>
       </div>
 
@@ -170,10 +150,34 @@
             <div id="submit-recipe-button-div">
             </div>
           </div>
-          
-
         </form>
       </div>
+
+      <!-- Single Recipe Page -->
+      <div class="container mt-5 text-left" id="single-recipe">
+        <h1 id="recipe-name-show"></h1>
+        <h5 id="servings-show"></h5>
+        <p id="description-show"></p>
+        <div class="d-flex align-items-stretch flex-wrap flex-sm-nowrap mt-3">
+          <div class="max-width-large-screen flex-sm-grow-0">
+            <h5>Ingredients</h5>
+            <table class="table">
+              <tbody id="ingredients-list-show">
+              </tbody>
+            </table>
+          </div>
+          <div>
+            <h5>Instructions</h5>
+            <div id="instructions-list-show">
+            </div>
+          </div>
+        </div>
+        <div class="d-flex flex-column align-items-end">
+          <div class="form-group mt-5" id="edit-recipe-button">
+          </div>
+        </div>
+      </div>
+
     </div>
     <script src="src/404redirect.js"></script>
     <script src="src/cookbook.js"></script>

@@ -6,6 +6,10 @@
   display: none;
 }
 
+#page404 {
+  display: none;
+}
+
 #front-page {
   display: none;
 }
@@ -20,6 +24,7 @@
 
 .nav-item {
   color: white;
+  font-size: 1.2em;
 }
 
 .nav-item:hover {
@@ -28,6 +33,10 @@
 
 #logo {
   width: 185px;
+}
+
+#img-404 {
+  width: 75%;
 }
 
 .btn-primary {
