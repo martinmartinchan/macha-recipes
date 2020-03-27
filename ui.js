@@ -15,7 +15,6 @@ class UI {
       if (this.editingRecipe) {
         if (confirm("Quit editing recipe?")) {
           this.editingRecipe = false;
-          this.clearAddOrEditRecipePage();
           this.fillAddRecipePage();
           history.pushState(null, "Macha Recipes", "/");
           this.resetFrontPage();
@@ -31,8 +30,6 @@ class UI {
       if (this.editingRecipe) {
         if (confirm("Quit editing recipe?")) {
           this.editingRecipe = false;
-          this.clearAddOrEditRecipePage();
-          this.fillAddRecipePage();
           history.pushState(null, "Add recipe", "/addrecipe");
           this.fillAddRecipePage();
           this.goToAddOrEditRecipePage();
@@ -85,9 +82,8 @@ class UI {
       if (this.editingRecipe) {
         if (confirm("Quit editing recipe?")) {
           this.editingRecipe = false;
-          this.clearAddOrEditRecipePage();
           this.fillAddRecipePage();
-          this.deroute();
+          this.route();
         }
       } else {
         this.route();
@@ -101,26 +97,48 @@ class UI {
 
 	/* Function route to the correct page */
   route() {
-    let subPath = location.pathname;
-    subPath = decodeURI(subPath.slice(1));
-    let recipeFound = false;
-    if (this.recipes.length != 0) {
+    let url = new URL(location.href);
+    /* First check if we are in edit recipe */
+    if (url.pathname === '/editrecipe') {
+      /* Check if there are name given as param (i.e. not undefined) */
+      let recipeName = decodeURI(url.searchParams.get("name"));
+      if (recipeName) {
+        /* Search through the recipes and look for a match */
+        this.recipes.forEach(recipe => {
+          if (recipe.name === recipeName) {
+            this.fillEditRecipePage(recipe);
+            this.goToAddOrEditRecipePage();
+          }
+        });
+      }
+    /* Check if we are in add recipe */
+    } else if (url.pathname === '/addrecipe') {
+      this.fillAddRecipePage();
+      this.goToAddOrEditRecipePage();
+    /* Check if we are in the front page */
+    } else if (url.pathname === '/') {
+      this.resetFrontPage();
+      this.goToFrontPage();
+    /* Check if we are viewing a recipe */
+    } else {
+      let recipeFound = false;
+      let recipeName = decodeURI(url.pathname.slice(1)); //Slice 1 to remove the slash
       this.recipes.forEach(recipe => {
-        if (recipe.name === subPath) {
+        if (recipe.name === recipeName) {
+          recipeFound = true;
           this.fillSingleRecipePage(recipe);
           this.goToSingleRecipePage();
-          recipeFound = true;
-          return;
         }
       });
-    }
-    if (!recipeFound) {
-      if (subPath === "addrecipe") {
-        this.goToAddOrEditRecipePage();
-      } else {
-        this.goToFrontPage();
+      /* Recipe not matching anythig means nothing is found. Show 404 */
+      if (!recipeFound) {
+        this.pageNotFound();
       }
     }
+  }
+
+  pageNotFound() {
+    //TODO
   }
 
 	/* Shows a status with information on how the communication with the cookbook went */
@@ -240,7 +258,30 @@ class UI {
 	}
 
 	/* Prepares the add recipe page for a recipe to be added. Creates appropriate button */
-	fillAddRecipePage() {  
+	fillAddRecipePage() {
+    document.getElementById('recipe-name-input').value = "";
+    document.getElementById('recipe-description-input').value = "";
+    document.getElementById('servings-input').value = "";
+    let ingredientList = document.getElementById('ingredient-list');
+    while (ingredientList.children.length > 2) {
+      ingredientList.removeChild(ingredientList.children[1]);
+    }
+    document.querySelector('.ingredients-input').value = "";
+    document.querySelector('.amount-input').value = "";
+    document.querySelector('.units-input').value = "";
+
+    let instructionList = document.getElementById('instruction-list');
+    while (instructionList.children.length > 3) {
+      instructionList.removeChild(instructionList.children[2]);
+    }
+    document.querySelector('.instruction-input').value = "";
+		this.updateInstructionSteps();
+		
+		const buttonDiv = document.getElementById('submit-recipe-button-div');
+    while (buttonDiv.lastChild) {
+      buttonDiv.removeChild(buttonDiv.lastChild);
+    }
+
     const submitButton = document.createElement('button');
     submitButton.classList.add('btn');
     submitButton.classList.add('btn-primary');
@@ -253,7 +294,6 @@ class UI {
         this.cb.addRecipe(recipe)
           .then(data => {
             if (data.success) {
-              this.clearAddOrEditRecipePage();
               this.fillAddRecipePage();
               this.recipes = data.result;
               this.populateRecipes(this.recipes);
@@ -273,7 +313,7 @@ class UI {
       }
       e.preventDefault();
     });
-    document.getElementById('submit-recipe-button-div').appendChild(submitButton);
+    buttonDiv.appendChild(submitButton);
   }
 
 	/* Prepares the edit recipe page for a recipe to be edited. Creates appropriate button */
@@ -302,6 +342,11 @@ class UI {
       instructionList.getElementsByClassName('instruction-input')[step - 1].value = recipe.instructions[i].instruction;
     }
 
+    const buttonDiv = document.getElementById('submit-recipe-button-div');
+    while (buttonDiv.lastChild) {
+      buttonDiv.removeChild(buttonDiv.lastChild);
+    }
+
     const submitButton = document.createElement('button');
     submitButton.classList.add('btn');
     submitButton.classList.add('btn-primary');
@@ -315,7 +360,6 @@ class UI {
           .then(data => {
             if (data.success) {
               this.editingRecipe = false;
-              this.clearAddOrEditRecipePage();
               this.fillAddRecipePage();
               this.recipes = data.result;
               this.populateRecipes(this.recipes);
@@ -335,33 +379,7 @@ class UI {
       }
       e.preventDefault();
     });
-    document.getElementById('submit-recipe-button-div').appendChild(submitButton);
-  }
-
-	/* Clears the form in add or edit page and removes the old button */
-	clearAddOrEditRecipePage(){
-    document.getElementById('recipe-name-input').value = "";
-    document.getElementById('recipe-description-input').value = "";
-    document.getElementById('servings-input').value = "";
-    let ingredientList = document.getElementById('ingredient-list');
-    while (ingredientList.children.length > 2) {
-      ingredientList.removeChild(ingredientList.children[1]);
-    }
-    document.querySelector('.ingredients-input').value = "";
-    document.querySelector('.amount-input').value = "";
-    document.querySelector('.units-input').value = "";
-
-    let instructionList = document.getElementById('instruction-list');
-    while (instructionList.children.length > 3) {
-      instructionList.removeChild(instructionList.children[2]);
-    }
-    document.querySelector('.instruction-input').value = "";
-		this.updateInstructionSteps();
-		
-		const buttonDiv = document.getElementById('submit-recipe-button-div');
-    while (buttonDiv.lastChild) {
-      buttonDiv.removeChild(buttonDiv.lastChild);
-    }
+    buttonDiv.appendChild(submitButton);
   }
 
 	/* Fills the single recipe page with a new recipe */
@@ -442,9 +460,8 @@ class UI {
     editButton.classList.add('mr-3');
     editButton.innerHTML = "Edit Recipe";
     editButton.addEventListener('click', e => {
-      this.clearAddOrEditRecipePage();
       this.fillEditRecipePage(recipe);
-      //TODO route edit page
+      history.pushState(null, "recipe.name", "editrecipe?name=" + encodeURI(recipe.name));
       this.goToAddOrEditRecipePage();
       e.preventDefault()
     });
@@ -478,7 +495,7 @@ class UI {
     editRecipeDiv.append(deleteButton);
   }
 
-	/* --------------------------Help functions--------------------------- */
+  /* --------------------------Help functions--------------------------- */
 	addIngredientRow() {
     const rowDiv = document.createElement('div');
     rowDiv.classList.add('form-row');
