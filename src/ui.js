@@ -229,7 +229,7 @@ class UI {
       let header;
       emptyCard = document.createElement('div');
       emptyCard.classList.add('card');
-      emptyCard.classList.add('w-75');
+      emptyCard.classList.add('small-width');
       emptyCard.classList.add('mt-3');
       emptyCard.classList.add('mx-auto');
 
@@ -247,7 +247,7 @@ class UI {
       recipeList.forEach(recipe => {
         recipeCard = document.createElement('div');
         recipeCard.classList.add('card');
-        recipeCard.classList.add('w-75');
+        recipeCard.classList.add('small-width');
         recipeCard.classList.add('mt-3');
         recipeCard.classList.add('mx-auto');
   
@@ -531,16 +531,16 @@ class UI {
     const minusDiv = document.createElement('div');
     
     ingredientDiv.classList.add('form-group');
-    ingredientDiv.classList.add('col-md-7');
+    ingredientDiv.classList.add('col-sm-7');
 
     amountDiv.classList.add('form-group');
-    amountDiv.classList.add('col-md-2');
+    amountDiv.classList.add('col-sm-2');
 
     unitDiv.classList.add('form-group');
-    unitDiv.classList.add('col-md-2');
+    unitDiv.classList.add('col-sm-2');
 
     minusDiv.classList.add('form-group');
-    minusDiv.classList.add('col-md-1');
+    minusDiv.classList.add('col-sm-1');
 
     const ingredientInput = document.createElement('input');
     const amountInput = document.createElement('input');
@@ -588,7 +588,7 @@ class UI {
 
     const stepDiv = document.createElement('div');
     stepDiv.classList.add('form-group');
-    stepDiv.classList.add('col-md-1');
+    stepDiv.classList.add('col-1');
     stepDiv.classList.add('align-self-center');
     stepDiv.style.textAlign = 'center';
 
@@ -598,7 +598,7 @@ class UI {
 
     const inputDiv = document.createElement('div');
     inputDiv.classList.add('form-group');
-    inputDiv.classList.add('col-md-9');
+    inputDiv.classList.add('col-9');
 
     const inputTextArea = document.createElement('textarea');
     inputTextArea.classList.add('form-control');
@@ -607,7 +607,7 @@ class UI {
 
     const buttonDiv = document.createElement('div');
     buttonDiv.classList.add('form-group');
-    buttonDiv.classList.add('col-md-1');
+    buttonDiv.classList.add('col-1');
 
     const minusButton = document.createElement('button');
     minusButton.classList.add('btn');

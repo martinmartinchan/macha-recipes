@@ -15,13 +15,13 @@
     <!-- Main container -->
     <div class="container mb-5">
       <!-- Navigation bar -->
-      <nav class="navbar navbar-expand bg-dark">
-        <li class="nav-item navbar-nav p-2 mr-auto" id="logo-nav">
+      <nav class="align-middle navbar navbar-expand bg-dark">
+        <li class="nav-item navbar-nav mr-auto" id="logo-nav">
           <img id="logo" src="images/logo.png">
         </li>
         <ul class="navbar-nav ml-auto">
-          <li class="nav-item p-2 ml-2" id="recipes-nav">Recipes</li>
-          <li class="nav-item p-2 ml-2" id="add-recipe-nav">Add recipe</li>
+          <li class="nav-item ml-3" id="recipes-nav">Recipes</li>
+          <li class="nav-item ml-3" id="add-recipe-nav">Add recipe</li>
         </ul>
       </nav>
 
@@ -59,38 +59,38 @@
       <div class="container mt-5 mx-auto" id="add-or-edit-recipe">
         <form>
           <!-- Recipe Name -->
-          <div class="form-group col-md-12">
+          <div class="form-group col-sm-12">
             <label for="recipe-name-input">Recipe Name</label>
             <input class="form-control" id="recipe-name-input" placeholder="Enter recipe name">
           </div>
 
           <!-- Servings -->
           <div>
-            <div class="form-group col-md-3">
+            <div class="form-group col-6 col-md-3">
               <label for="servings-input">Servings</label>
               <input type="number" class="form-control" id="servings-input" placeholder="Enter number of servings"></input>
             </div>
           </div>
 
           <!-- Description -->
-          <div class="form-group col-md-12">
+          <div class="form-group col-12">
             <label for="recipe-description-input">Description</label>
             <textarea class="form-control" id="recipe-description-input" rows="3" placeholder="Enter description"></textarea>
           </div>
 
           <!-- Ingredients -->
-          <div class="w-75 mx-auto" id=ingredient-list>
+          <div class="small-width mx-auto" id=ingredient-list>
             <div class="form-row flex-nowrap">
-              <div class="form-group col-md-7">
+              <div class="form-group col-sm-7">
                 <label for="ingredients-input">Ingredient</label>
                 <input class="form-control ingredients-input">
               </div>
-              <div class="form-group col-md-2">
+              <div class="form-group col-sm-2">
                 <label for="amount-input">Amount</label>
                 <input class="form-control amount-input">
                 </input>
               </div>
-              <div class="form-group col-md-2">
+              <div class="form-group col-sm-2">
                 <label for="units-input">Unit</label>
                 <datalist id=unitList>
                   <option value="g"></option>
@@ -104,42 +104,42 @@
               </div>
             </div>
             <div class="form-row flex-nowrap">
-              <div class="form-group col-md-7">
+              <div class="form-group col-sm-7">
                 <input class="form-control" readonly>
               </div>
-              <div class="form-group col-md-2">
-                <input class="form-control" readonly>
-                </input>
-              </div>
-              <div class="form-group col-md-2">
+              <div class="form-group col-sm-2">
                 <input class="form-control" readonly>
                 </input>
               </div>
-              <div class="form-group col-md-1">
+              <div class="form-group col-sm-2">
+                <input class="form-control" readonly>
+                </input>
+              </div>
+              <div class="form-group col-sm-1">
                 <button type="submit" id="addIngredientButton" class="btn btn-primary w-100">+</button>
               </div>
             </div>
           </div>
 
           <!-- Instructions -->
-          <div class="w-75 mx-auto" id=instruction-list>
+          <div class="small-width mx-auto" id=instruction-list>
             <label for="instruction-input">Instructions</label>
             <div class="form-row align-items-end flex-nowrap">
-              <div class="form-group col-md-1 align-self-center">
+              <div class="form-group col-1 align-self-center">
                 <span class="instruction-step">1.</span>
               </div>
-              <div class="form-group col-md-9">
+              <div class="form-group col-9">
                 <textarea class="form-control instruction-input" rows="2"></textarea>
               </div>
             </div>
             <div class="form-row align-items-end flex-nowrap">
-              <div class="form-group col-md-1 align-self-center">
+              <div class="form-group col-1 align-self-center">
                 <span id="read-only-instruction-number">2.</span>
               </div>
-              <div class="form-group col-md-9">
+              <div class="form-group col-9">
                 <textarea class="form-control" rows="2" readonly></textarea>
               </div>
-              <div class="form-group col-md-1">
+              <div class="form-group col-1">
                 <button type="submit" id="addInstructionButton" class="btn btn-primary w-100">+</button>
               </div>
             </div>

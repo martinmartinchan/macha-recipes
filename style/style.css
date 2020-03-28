@@ -24,7 +24,7 @@
 
 .nav-item {
   color: white;
-  font-size: 1.2em;
+  font-size: 1em;
 }
 
 .nav-item:hover {
@@ -32,7 +32,7 @@
 }
 
 #logo {
-  width: 185px;
+  width: 135px;
 }
 
 #img-404 {
@@ -110,5 +110,18 @@ table {
 @media screen and (min-width: 576px) {
   .max-width-large-screen {
     max-width: 350px;
+  }
+
+  #logo {
+    width: 185px;
+  }
+
+  .nav-item {
+    font-size: 1.2em;
+    padding: 5px;
+  }
+
+  .small-width {
+    width: 75%;
   }
 }
