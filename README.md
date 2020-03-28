@@ -1,6 +1,7 @@
 # Macha recipes
 
-This is the front end project for the recipe web app, Macha recipes. Funtionality is implemented with vanilla javascript and styling is done by Bootstrap 4.
+This is the frontend project for the recipe web application, Macha recipes.
+The functionality is implemented with vanilla javascript and styling is done with Bootstrap 4.
 
 See the application live at: [Macha recipes](https://macharecipes.com)
 
