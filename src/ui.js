@@ -592,7 +592,6 @@ class UI {
     stepDiv.classList.add('form-group');
     stepDiv.classList.add('col-1');
     stepDiv.classList.add('align-self-center');
-    stepDiv.style.textAlign = 'center';
 
     const stepNumber = document.createElement('span');
     stepNumber.classList.add('instruction-step');
@@ -631,7 +630,7 @@ class UI {
     const instructionList = document.getElementById('instruction-list');
     let childrenNumber = instructionList.children.length;
     instructionList.insertBefore(rowDiv, instructionList.children[childrenNumber - 1]);
-    document.getElementById('read-only-instruction-number').innerHTML = childrenNumber;
+    document.getElementById('read-only-instruction-number').innerHTML = childrenNumber + '.';
   }
 
   removeIngredientRow(e, rowDiv) {
@@ -648,7 +647,7 @@ class UI {
 	updateInstructionSteps() {
     const instructionList = document.getElementById('instruction-list')
     for (let i = 1; i < instructionList.childElementCount; i++) {
-      instructionList.children[i].children[0].children[0].innerHTML = i + '.'
+      instructionList.children[i].children[0].children[0].innerHTML = i + '.';
     }
 	}
 
