@@ -495,9 +495,10 @@ class UI {
     deleteButton.classList.add('btn-danger');
     deleteButton.innerHTML = "Delete Recipe";
     deleteButton.addEventListener('click', e => {
-      let data = {name: recipe.name}
-      this.loading();
-      this.cb.deleteRecipe(data)
+      if (confirm("Delete " + recipe.name + " from the cookbook?")) {
+        let data = {name: recipe.name}
+        this.loading();
+        this.cb.deleteRecipe(data)
         .then(data => {
           if (data.success) {
             this.recipes = data.result;
@@ -512,6 +513,7 @@ class UI {
         .catch(err => {
           console.log(err);
         });
+      }
       e.preventDefault()
     });
 
